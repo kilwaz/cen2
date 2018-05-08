@@ -94,7 +94,6 @@ public class DataBank {
                 }
             }
         } catch (SQLException ex) {
-
             Error.SELECT_QUERY.record().additionalInformation(selectQuery.getQuery()).create(ex);
         }
 

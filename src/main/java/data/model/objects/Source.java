@@ -1,6 +1,7 @@
 package data.model.objects;
 
 import data.model.DatabaseObject;
+import data.model.objects.json.JSONMappable;
 
 import java.util.UUID;
 
@@ -18,6 +19,7 @@ public class Source extends DatabaseObject {
         this.name = name;
     }
 
+    @JSONMappable("fileName")
     public String getFileName() {
         return fileName;
     }
@@ -26,6 +28,7 @@ public class Source extends DatabaseObject {
         this.fileName = fileName;
     }
 
+    @JSONMappable("name")
     public String getName() {
         return name;
     }

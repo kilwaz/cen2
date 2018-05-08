@@ -15,4 +15,10 @@
         <function-class>utils.JSPFunctions</function-class>
         <function-signature>java.lang.String resolveURL(java.lang.String)</function-signature>
     </function>
+
+    <function>
+        <name>jsonData</name>
+        <function-class>utils.JSONData</function-class>
+        <function-signature>java.lang.String buildJsonData(java.lang.String,java.lang.String)</function-signature>
+    </function>
 </taglib>

@@ -1,7 +1,9 @@
 package data.model;
 
+import data.model.objects.json.JSONMapper;
 import error.Error;
 import org.apache.log4j.Logger;
+import org.json.JSONObject;
 import utils.managers.DatabaseObjectManager;
 
 import java.lang.reflect.InvocationTargetException;
@@ -10,6 +12,7 @@ import java.util.UUID;
 public class DatabaseObject {
     private static Logger log = Logger.getLogger(DatabaseObject.class);
     private UUID uuid = UUID.randomUUID();
+    private Class jsonMapper = null;
 
     public DatabaseObject() {
         // Here the UUID is generated for us
@@ -111,5 +114,9 @@ public class DatabaseObject {
         } catch (NullPointerException | InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException ex) {
             Error.DATABASE_LOAD_CLASS_INIT.record().additionalInformation("Class " + this.getClass()).create(ex);
         }
+    }
+
+    public JSONObject asJSON() {
+        return JSONMapper.build().process(this);
     }
 }

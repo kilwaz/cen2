@@ -16,6 +16,6 @@ public class Hello extends Request {
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) {
-//        request.setAttribute("test", "This is from the class");
+
     }
 }

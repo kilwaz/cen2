@@ -1,13 +1,12 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="cen" tagdir="/WEB-INF/tags" %>
 
 <jsp:include page="../includes/header.jsp"/>
 
 <script src="https://resources.kilwaz.me/js/core.min.js"></script>
 
-// JSON Data
-<script>
-
-</script>
+<%--JSON DATA--%>
+<cen:dataSource classPath="data.model.dao.SourceDAO" jsonDataSource="allSources"/>
 
 <style>
     input::-webkit-outer-spin-button,

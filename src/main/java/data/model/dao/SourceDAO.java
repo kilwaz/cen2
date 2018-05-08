@@ -5,6 +5,7 @@ import data.SelectQuery;
 import data.SelectResult;
 import data.SelectResultRow;
 import data.model.objects.Source;
+import data.model.objects.json.JSONDataSource;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
@@ -31,6 +32,7 @@ public class SourceDAO {
         return source;
     }
 
+    @JSONDataSource("allSources")
     public List<Source> getSources() {
         List<Source> sources = new ArrayList<>();
 

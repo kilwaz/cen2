@@ -15,7 +15,7 @@ public class AppParams {
     public static final String CURRENT_USER = "alex";
 
     // Database information - Defaults are displayed here and can be overridden by the SDE.xml file
-    private static String REMOTE_DATABASE_CONNECTION = "jdbc:mysql://127.0.0.1/cen";
+    private static String REMOTE_DATABASE_CONNECTION = "jdbc:mysql://127.0.0.1/cen?autoReconnect=true&useSSL=false";
     private static String REMOTE_DATABASE_USERNAME = "kilwaz";
     private static String REMOTE_DATABASE_PASSWORD = "CenDatabase123";
 
