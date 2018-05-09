@@ -43,24 +43,26 @@ sourceVideoApp.controller('sourceVideoCtrl', function ($scope, $http) {
 
     $scope.marks = [];
 
+    getSources($scope);
+
     $scope.setSourceTime = function () {
         document.getElementsByTagName("video")[0].currentTime = $scope.convertToSeconds();
-    };
-
-    $scope.sourceChange = function (item) {
-        var thing = $scope.currentVideo;
-        // var id = item.attributes['source-reference'].value;
-        console.log(thing);
     };
 
     $scope.probeSource = function () {
         var requestData = $.param({
             json: JSON.stringify({
-                name: "post data"
+                ref: $scope.selectedVideoRef
             })
         });
 
-        $http.post("rdb", requestData, config)
+        var config = {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
+            }
+        };
+
+        $http.post("probeSource", requestData, config)
             .then(
                 function (response) {
                     // success callback
@@ -100,6 +102,7 @@ sourceVideoApp.directive('sourceChange', function () {
     return {
         link: function link(scope, element) {
             element.bind('change', function () {
+                scope.selectedVideoRef = element[0].selectedOptions[0].dataset.ref;
                 console.log(element[0].selectedOptions[0].dataset.ref);
             });
         }

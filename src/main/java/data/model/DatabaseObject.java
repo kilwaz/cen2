@@ -1,5 +1,6 @@
 package data.model;
 
+import data.model.objects.json.JSONMappable;
 import data.model.objects.json.JSONMapper;
 import error.Error;
 import org.apache.log4j.Logger;
@@ -64,6 +65,7 @@ public class DatabaseObject {
         return null;
     }
 
+    @JSONMappable("uuid")
     public UUID getUuid() {
         return uuid;
     }

@@ -3,10 +3,10 @@
 
 <jsp:include page="../includes/header.jsp"/>
 
-<script src="https://resources.kilwaz.me/js/core.min.js"></script>
-
 <%--JSON DATA--%>
-<cen:dataSource classPath="data.model.dao.SourceDAO" jsonDataSource="allSources"/>
+<cen:dataSource classPath="data.model.dao.SourceDAO" jsonDataSource="allSources" ngVar="sources"/>
+
+<script src="https://resources.kilwaz.me/js/core.min.js"></script>
 
 <style>
     input::-webkit-outer-spin-button,
@@ -32,13 +32,18 @@
         -webkit-box-shadow: none;
         box-shadow: none;
     }
+
+    #player {
+        height: 450px;
+        background-color: #5a6268;
+    }
 </style>
 
 <div class="wrapper">
     <jsp:include page="../includes/sidebar.jsp"/>
 
     <!-- Page Content Holder -->
-    <div id="content">
+    <div id="content" class="w-100">
         <jsp:include page="../includes/topbar.jsp"/>
 
         <div ng-app="sourceVideoApp">
@@ -46,14 +51,15 @@
                 <label for="sourceSelect">Source: </label>
                 <select name="sourceSelect" id="sourceSelect" ng-model="currentVideo" source-change>
                     <option value="" selected="selected"></option>
-                    <c:forEach items="${sources}" var="source">
-                        <option data-ref="${source.uuid}" value="${source.fileName}">${source.name}</option>
-                    </c:forEach>
+                    <option ng-repeat="source in sources" data-ref="{{source.uuid}}" value="{{source.fileName}}">
+                        {{source.name}}
+                    </option>
                 </select>
 
                 <button type="button" class="btn btn-primary" ng-click="probeSource()">Probe source</button>
 
-                <video class="embed-responsive" controls source-video video-current-time="currentTime"
+                <video id="player" class="embed-responsive" controls source-video
+                       video-current-time="currentTime"
                        ng-src="{{ currentVideo }}"
                        time-sec-tens="timeSecTens" time-sec-ones="timeSecOnes"
                        time-min-tens="timeMinTens" time-min-ones="timeMinOnes" time-hour-tens="timeHourTens"

@@ -45,4 +45,8 @@ public class SourceDAO {
 
         return sources;
     }
+
+    public Source getSourceByUUID(String uuid) {
+        return Source.load(DAO.UUIDFromString(uuid), Source.class);
+    }
 }

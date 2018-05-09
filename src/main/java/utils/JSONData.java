@@ -25,7 +25,7 @@ public class JSONData<JSONDataClass> {
                     if (jsonDataSourceMethod != null && jsonDataSourceMethod.value().equals(jsonDataSource)) {
                         log.info("jsonDataSource " + jsonDataSource + " compared to method " + jsonDataSourceMethod.value());
                         JSONContainer<JSONDataClass> jsonDataClassJSONContainer = new JSONContainer<>();
-                        jsonDataClassJSONContainer.data((List<JSONDataClass>) method.invoke(jsonDataObject));
+                        jsonDataClassJSONContainer.dbData((List<JSONDataClass>) method.invoke(jsonDataObject));
                         return jsonDataClassJSONContainer.writeToString();
                     }
                 }

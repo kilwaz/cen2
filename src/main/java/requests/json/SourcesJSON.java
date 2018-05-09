@@ -15,7 +15,7 @@ public class SourcesJSON extends Request {
     public void doGet(HttpServletRequest request, HttpServletResponse response) {
         SourceDAO sourceDAO = new SourceDAO();
         JSONContainer jsonContainer = new JSONContainer();
-        jsonContainer.data(sourceDAO.getSources());
+        jsonContainer.dbData(sourceDAO.getSources());
         jsonContainer.writeToResponse(response);
     }
 }

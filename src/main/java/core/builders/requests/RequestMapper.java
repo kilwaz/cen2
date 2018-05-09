@@ -1,6 +1,7 @@
 package core.builders.requests;
 
 import org.apache.log4j.Logger;
+import requests.actions.ProbeSource;
 import requests.actions.ResetDatabase;
 import requests.annotations.Action;
 import requests.annotations.JSON;
@@ -24,6 +25,7 @@ public class RequestMapper {
         build(DatabaseAdmin.class);
         build(SourcesJSON.class);
         build(ResetDatabase.class);
+        build(ProbeSource.class);
         build(Import.class);
     }
 

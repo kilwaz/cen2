@@ -60,9 +60,9 @@ public class ResourceFileMapper {
             BufferedReader br = new BufferedReader(
                     new InputStreamReader(p.getInputStream()));
             while ((s = br.readLine()) != null)
-                System.out.println("Less CSS: " + s);
+                log.info("Less CSS: " + s);
             p.waitFor();
-            System.out.println("exit: " + p.exitValue());
+            log.info("exit: " + p.exitValue());
             p.destroy();
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
