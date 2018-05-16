@@ -53,13 +53,16 @@ public class XMLImporter {
 
                     String name = sourceNode.getElementsByTagName("name").item(0).getTextContent();
                     String fileName = sourceNode.getElementsByTagName("fileName").item(0).getTextContent();
+                    String url = sourceNode.getElementsByTagName("url").item(0).getTextContent();
 
                     log.info("Name = " + name);
                     log.info("FileName = " + fileName);
+                    log.info("URL = " + url);
 
                     Source newSource = Source.create(Source.class);
                     newSource.setFileName(fileName);
                     newSource.setName(name);
+                    newSource.setUrl(url);
                     newSource.save();
                 }
             }

@@ -95,6 +95,10 @@ public class DataBank {
             }
         } catch (SQLException ex) {
             Error.SELECT_QUERY.record().additionalInformation(selectQuery.getQuery()).create(ex);
+            if (!dbConnection.isConnected() && dbConnection.isApplicationConnection()) { // If we are not connected anymore, report this to the user status bar
+                log.info("Trying to reconnect via the exception");
+                dbConnection.connect();
+            }
         }
 
         return selectResult;

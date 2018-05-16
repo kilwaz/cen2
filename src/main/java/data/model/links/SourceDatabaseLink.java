@@ -13,6 +13,7 @@ public class SourceDatabaseLink extends DatabaseLink {
         // Make sure the order is the same as column order in database
         link("uuid", method("getUuidString"), method("setUuid", UUID.class)); // 1
         link("file_name", method("getFileName"), method("setFileName", String.class)); // 2
-        link("name", method("getName"), method("setName", String.class)); // 3
+        link("url", method("getUrl"), method("setUrl", String.class)); // 3
+        link("name", method("getName"), method("setName", String.class)); // 4
     }
 }

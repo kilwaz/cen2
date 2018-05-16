@@ -4,7 +4,8 @@
 <jsp:include page="../includes/header.jsp"/>
 
 <%--JSON DATA--%>
-<cen:dataSource classPath="data.model.dao.SourceDAO" jsonDataSource="allSources" ngVar="sources"/>
+<cen:dataSource classPath="data.model.dao.SourceDAO" jsonDataSource="allSources" functionName="getSources"
+                ngVar="sources"/>
 
 <script src="https://resources.kilwaz.me/js/core.min.js"></script>
 
@@ -51,12 +52,13 @@
                 <label for="sourceSelect">Source: </label>
                 <select name="sourceSelect" id="sourceSelect" ng-model="currentVideo" source-change>
                     <option value="" selected="selected"></option>
-                    <option ng-repeat="source in sources" data-ref="{{source.uuid}}" value="{{source.fileName}}">
+                    <option ng-repeat="source in sources" data-ref="{{source.uuid}}" value="{{source.url}}">
                         {{source.name}}
                     </option>
                 </select>
 
-                <button type="button" class="btn btn-primary" ng-click="probeSource()">Probe source</button>
+                <button type="button" class="btn btn-primary" ng-click="probeSource()">Probe</button>
+                <button type="button" class="btn btn-primary" ng-click="encodeSource()">Encode</button>
 
                 <video id="player" class="embed-responsive" controls source-video
                        video-current-time="currentTime"

@@ -1,6 +1,8 @@
 package data.model;
 
+import data.model.links.ProcessDatabaseLink;
 import data.model.links.SourceDatabaseLink;
+import data.model.objects.Process;
 import data.model.objects.Source;
 import error.Error;
 
@@ -12,9 +14,10 @@ import java.util.List;
 public class DatabaseLink {
     private static HashMap<Class, Class> linkClasses = new HashMap<>();
 
-    // Need to find an alternative to doing this
+    // Need to find an alternative to doing this, something automated
     static {
         linkClasses.put(Source.class, SourceDatabaseLink.class);
+        linkClasses.put(Process.class, ProcessDatabaseLink.class);
     }
 
     private String tableName = "";

@@ -1,6 +1,7 @@
 package core.builders.requests;
 
 import org.apache.log4j.Logger;
+import requests.actions.EncodeSource;
 import requests.actions.ProbeSource;
 import requests.actions.ResetDatabase;
 import requests.annotations.Action;
@@ -11,6 +12,7 @@ import requests.json.SourcesJSON;
 import requests.pages.DatabaseAdmin;
 import requests.pages.Hello;
 import requests.pages.Import;
+import requests.pages.Processes;
 
 import java.util.HashMap;
 
@@ -27,6 +29,8 @@ public class RequestMapper {
         build(ResetDatabase.class);
         build(ProbeSource.class);
         build(Import.class);
+        build(EncodeSource.class);
+        build(Processes.class);
     }
 
     private static void build(Class requestClass) {
