@@ -13,6 +13,6 @@ public class ProcessDatabaseLink extends DatabaseLink {
         // Make sure the order is the same as column order in database
         link("uuid", method("getUuidString"), method("setUuid", UUID.class)); // 1
         link("command", method("getCommand"), method("setCommand", String.class)); // 2
-        link("isCommandLine", method("isCommandLine"), method("setIsCommandLine", Boolean.class)); // 3
+        link("is_command_line", method("isCommandLine"), method("setIsCommandLine", Boolean.class)); // 3
     }
 }

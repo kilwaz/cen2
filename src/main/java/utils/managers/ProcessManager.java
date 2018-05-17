@@ -7,11 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProcessManager {
+    private static Logger log = Logger.getLogger(ProcessManager.class);
+
     private static ProcessManager instance;
     private List<ManagedThread> runningThreads;
-    private Integer activeThreads = 0;
-
-    private static Logger log = Logger.getLogger(ProcessManager.class);
 
     public ProcessManager() {
         instance = this;
@@ -32,7 +31,7 @@ public class ProcessManager {
     }
 
     public synchronized Integer getActiveThreads() {
-        return activeThreads;
+        return runningThreads.size();
     }
 
     public List<ManagedThread> getRunningThreads() {

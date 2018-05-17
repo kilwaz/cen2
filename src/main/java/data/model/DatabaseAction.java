@@ -2,6 +2,7 @@ package data.model;
 
 import data.*;
 import data.model.dao.DAO;
+import data.model.objects.EncodedProgress;
 import error.Error;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -196,6 +197,12 @@ public class DatabaseAction<DBObject extends DatabaseObject, DBLink extends Data
 //                                    DrawableNode drawableNode = drawableNodeDAO.getDrawableNodeUnknownClassFromUuid(DAO.UUIDFromString(uuidStr));
 //                                    modelColumn.getObjectLoadMethod().invoke(dbObject, drawableNode);
 //                                }
+                            } else if (loadParameterClass.equals(EncodedProgress.class)) { // ENCODED PROGRESS
+                                String uuidStr = resultRow.getString(modelColumn.getColumnName());
+                                if (uuidStr != null && !uuidStr.isEmpty()) {
+                                    EncodedProgress encodedProgress = loadCachedObject(uuidStr, EncodedProgress.class);
+                                    modelColumn.getObjectLoadMethod().invoke(dbObject, encodedProgress);
+                                }
                             } else if (loadParameterClass.equals(Object.class)) { // OBJECT
                                 modelColumn.getObjectLoadMethod().invoke(dbObject, resultRow.getColumnObject(modelColumn.getColumnName()));
                             }

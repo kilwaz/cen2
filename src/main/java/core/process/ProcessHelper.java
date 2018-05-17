@@ -3,6 +3,7 @@ package core.process;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
+import java.util.concurrent.Flow;
 
 public class ProcessHelper extends ManagedRunnable {
     private static Logger log = Logger.getLogger(ProcessHelper.class);
@@ -14,6 +15,11 @@ public class ProcessHelper extends ManagedRunnable {
     private ProcessListener inputListener = null;
     private ProcessListener errorListener = null;
     private ProcessListener outputListener = null;
+
+    private String processReference = null;
+    private String processDescription = null;
+
+    private Flow.Subscriber<LogMessage> logSubscriber;
 
     private Process p = null;
 
@@ -36,17 +42,15 @@ public class ProcessHelper extends ManagedRunnable {
         try {
             p = Runtime.getRuntime().exec(getCommand());
 
-            log.info("Process running...");
+            inputListener = new ProcessListener().inputStream(p.getInputStream()).processHelper(this);
+            errorListener = new ProcessListener().errorStream(p.getErrorStream()).processHelper(this);
+            outputListener = new ProcessListener().outputStream(p.getOutputStream()).processHelper(this);
 
-            inputListener = new ProcessListener().inputStream(p.getInputStream());
-            errorListener = new ProcessListener().inputStream(p.getErrorStream());
-            outputListener = new ProcessListener().outputStream(p.getOutputStream());
+            managedInputThread = new ManagedThread().managedRunnable(inputListener).start();
+            managedErrorThread = new ManagedThread().managedRunnable(errorListener).start();
+            managedOutputThread = new ManagedThread().managedRunnable(outputListener).start();
 
-            managedInputThread = new ManagedThread(inputListener, "", "", true);
-            managedErrorThread = new ManagedThread(errorListener, "", "", true);
-            managedOutputThread = new ManagedThread(outputListener, "", "", true);
-
-            log.info("Waiting for process to finish");
+            triggerLopSubscribe();
 
             p.waitFor();
         } catch (IOException | InterruptedException e) {
@@ -66,5 +70,36 @@ public class ProcessHelper extends ManagedRunnable {
                 outputListener.close();
             }
         }
+    }
+
+    private void triggerLopSubscribe() {
+        if (logSubscriber != null) {
+            inputListener.subscribe(logSubscriber);
+            errorListener.subscribe(logSubscriber);
+            outputListener.subscribe(logSubscriber);
+        }
+    }
+
+    public ProcessHelper logSubscriber(Flow.Subscriber<LogMessage> logSubscriber) {
+        this.logSubscriber = logSubscriber;
+        return this;
+    }
+
+    public ProcessHelper processReference(String processReference) {
+        this.processReference = processReference;
+        return this;
+    }
+
+    public ProcessHelper processDescription(String processDescription) {
+        this.processDescription = processDescription;
+        return this;
+    }
+
+    public String getProcessReference() {
+        return processReference;
+    }
+
+    public String getProcessDescription() {
+        return processDescription;
     }
 }

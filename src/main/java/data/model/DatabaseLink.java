@@ -1,7 +1,9 @@
 package data.model;
 
+import data.model.links.EncodedProgressDatabaseLink;
 import data.model.links.ProcessDatabaseLink;
 import data.model.links.SourceDatabaseLink;
+import data.model.objects.EncodedProgress;
 import data.model.objects.Process;
 import data.model.objects.Source;
 import error.Error;
@@ -18,6 +20,7 @@ public class DatabaseLink {
     static {
         linkClasses.put(Source.class, SourceDatabaseLink.class);
         linkClasses.put(Process.class, ProcessDatabaseLink.class);
+        linkClasses.put(EncodedProgress.class, EncodedProgressDatabaseLink.class);
     }
 
     private String tableName = "";

@@ -10,34 +10,28 @@ public class ManagedThread {
     private Thread thread;
     private ManagedRunnable managedRunnable;
     private Integer id = -1;
-    private String description = "";
-    private String threadReference = null;
 
-    public ManagedThread(ManagedRunnable managedRunnable, String description, String threadReference, Boolean startNow) {
+    public ManagedThread() {
         threadCounter++;
         this.id = threadCounter;
-        this.description = description;
-        this.managedRunnable = managedRunnable;
-        this.threadReference = threadReference;
-
-        thread = new Thread(managedRunnable);
-        if (startNow) {
-            start();
-        }
     }
 
-    public void start() {
+    public ManagedThread managedRunnable(ManagedRunnable managedRunnable) {
+        this.managedRunnable = managedRunnable;
+        thread = new Thread(managedRunnable);
+        return this;
+    }
+
+    public ManagedThread start() {
         ProcessManager.getInstance().addThread(this);
         thread.start();
+        return this;
     }
 
     public Integer getId() {
         return id;
     }
 
-    public String getDescription() {
-        return description;
-    }
 
     public Boolean getIsRunning() {
         return thread.isAlive();
@@ -46,15 +40,6 @@ public class ManagedThread {
 
     public String getString() {
         return this.toString();
-    }
-
-
-    public String getThreadReference() {
-        return threadReference;
-    }
-
-    public void setThreadReference(String threadReference) {
-        this.threadReference = threadReference;
     }
 
     public void join() {

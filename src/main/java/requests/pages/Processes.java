@@ -22,8 +22,6 @@ public class Processes extends Request {
         ProcessManager processManager = ProcessManager.getInstance();
         List<ManagedThread> managedThreadList = processManager.getRunningThreads();
 
-
-
         request.setAttribute("activeThreads", processManager.getActiveThreads());
     }
 }
