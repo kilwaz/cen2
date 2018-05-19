@@ -9,10 +9,10 @@ import java.util.concurrent.SubmissionPublisher;
 public class ProcessListener extends ManagedRunnable {
     private static Logger log = Logger.getLogger(ProcessListener.class);
 
-    private static final Integer PROCESSOR_UNSET = -1;
-    private static final Integer PROCESSOR_INPUT = 1;
-    private static final Integer PROCESSOR_ERROR = 2;
-    private static final Integer PROCESSOR_OUTPUT = 3;
+    public static final Integer PROCESSOR_UNSET = -1;
+    public static final Integer PROCESSOR_INPUT = 1;
+    public static final Integer PROCESSOR_ERROR = 2;
+    public static final Integer PROCESSOR_OUTPUT = 3;
 
     private Integer processorType = PROCESSOR_UNSET;
     private ProcessHelper processHelper;
@@ -53,14 +53,19 @@ public class ProcessListener extends ManagedRunnable {
         try {
             var line = "";
             while ((line = reader.readLine()) != null) {
-                var logMessage = new LogMessage()
+                logPublisher.submit(new LogMessage()
                         .message(line)
                         .processorType(processorType)
-                        .processHelper(processHelper);
-                logPublisher.submit(logMessage);
+                        .processHelper(processHelper));
             }
         } catch (IOException ex) {
             ex.printStackTrace();
+        } finally {
+            logPublisher.submit(new LogMessage()
+                    .processorType(processorType)
+                    .processHelper(processHelper)
+                    .finalMessage(true));
+            logPublisher.close();
         }
     }
 

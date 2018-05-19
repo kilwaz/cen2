@@ -1,5 +1,6 @@
 package data.imports;
 
+import core.process.Probe;
 import data.model.objects.Source;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
@@ -7,7 +8,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
@@ -33,10 +33,9 @@ public class XMLImporter {
         try {
             Document dom;
 
-            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            DocumentBuilder db = null;
+            var dbf = DocumentBuilderFactory.newInstance();
+            var db = dbf.newDocumentBuilder();
 
-            db = dbf.newDocumentBuilder();
             dom = db.parse(file);
 
             Element docEle = dom.getDocumentElement();
@@ -64,6 +63,9 @@ public class XMLImporter {
                     newSource.setName(name);
                     newSource.setUrl(url);
                     newSource.save();
+
+                    Probe probe = new Probe().source(newSource);
+                    probe.execute();
                 }
             }
         } catch (ParserConfigurationException | SAXException | IOException ex) {

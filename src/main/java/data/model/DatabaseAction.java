@@ -3,9 +3,11 @@ package data.model;
 import data.*;
 import data.model.dao.DAO;
 import data.model.objects.EncodedProgress;
+import data.model.objects.json.JSONContainer;
 import error.Error;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.json.JSONObject;
 import utils.managers.DatabaseObjectManager;
 
 import java.lang.reflect.InvocationTargetException;
@@ -137,16 +139,15 @@ public class DatabaseAction<DBObject extends DatabaseObject, DBLink extends Data
                 .append(dbLink.getTableName())
                 .append(" where uuid = ?");
 
-        SelectResult selectResult = (SelectResult) new SelectQuery(selectQueryBuilder.toString())
+        var selectResult = (SelectResult) new SelectQuery(selectQueryBuilder.toString())
                 .addParameter(dbObject.getUuidString())
                 .execute();
 
-
-        for (SelectResultRow resultRow : selectResult.getResults()) {
-            for (ModelColumn modelColumn : dbLink.getModelColumns()) {
+        for (var resultRow : selectResult.getResults()) {
+            for (var modelColumn : dbLink.getModelColumns()) {
                 try {
                     if (modelColumn.getObjectLoadMethod() != null) {
-                        Class[] loadMethodParameter = modelColumn.getObjectLoadMethod().getParameterTypes();
+                        var loadMethodParameter = modelColumn.getObjectLoadMethod().getParameterTypes();
                         Class loadParameterClass = null;
 
                         if (loadMethodParameter.length > 0) {
@@ -161,42 +162,17 @@ public class DatabaseAction<DBObject extends DatabaseObject, DBLink extends Data
                                 modelColumn.getObjectLoadMethod().invoke(dbObject, resultRow.getInt(modelColumn.getColumnName()));
                             } else if (loadParameterClass.equals(Boolean.class)) { // BOOLEAN
                                 modelColumn.getObjectLoadMethod().invoke(dbObject, resultRow.getBoolean(modelColumn.getColumnName()));
+                            } else if (loadParameterClass.equals(JSONObject.class)) { // JSON OBJECT
+                                var jsonStr = resultRow.getString(modelColumn.getColumnName());
+                                if (jsonStr != null) {
+                                    var jsonContainer = new JSONContainer(jsonStr);
+                                    modelColumn.getObjectLoadMethod().invoke(dbObject, jsonContainer.toJSONObject());
+                                }
                             } else if (loadParameterClass.equals(UUID.class)) { // UUID
                                 String uuid = resultRow.getString(modelColumn.getColumnName());
                                 if (uuid != null && !uuid.isEmpty()) {
                                     modelColumn.getObjectLoadMethod().invoke(dbObject, DAO.UUIDFromString(uuid));
                                 }
-//                            } else if (loadParameterClass.equals(User.class)) { // USER
-//                                String uuidStr = resultRow.getString(modelColumn.getColumnName());
-//                                if (uuidStr != null && !uuidStr.isEmpty()) {
-//                                    User user = loadCachedObject(uuidStr, User.class);
-//                                    modelColumn.getObjectLoadMethod().invoke(dbObject, user);
-//                                }
-//                            } else if (loadParameterClass.equals(DataTableRow.class)) { // DATA TABLE ROW
-//                                String uuidStr = resultRow.getString(modelColumn.getColumnName());
-//                                if (uuidStr != null && !uuidStr.isEmpty()) {
-//                                    DataTableRow user = loadCachedObject(uuidStr, DataTableRow.class);
-//                                    modelColumn.getObjectLoadMethod().invoke(dbObject, user);
-//                                }
-//                            } else if (loadParameterClass.equals(Program.class)) { // PROGRAM
-//                                String uuidStr = resultRow.getString(modelColumn.getColumnName());
-//                                if (uuidStr != null && !uuidStr.isEmpty()) {
-//                                    Program program = loadCachedObject(uuidStr, Program.class);
-//                                    modelColumn.getObjectLoadMethod().invoke(dbObject, program);
-//                                }
-//                            } else if (loadParameterClass.equals(LinkedTestCase.class)) { // LINKEDTESTCASE
-//                                String uuidStr = resultRow.getString(modelColumn.getColumnName());
-//                                if (uuidStr != null && !uuidStr.isEmpty()) {
-//                                    LinkedTestCase linkedTestCase = loadCachedObject(uuidStr, LinkedTestCase.class);
-//                                    modelColumn.getObjectLoadMethod().invoke(dbObject, linkedTestCase);
-//                                }
-//                            } else if (loadParameterClass.equals(DrawableNode.class) || loadParameterClass.getSuperclass() != null && loadParameterClass.getSuperclass().equals(DrawableNode.class)) { // DRAWABLE NODE
-//                                String uuidStr = resultRow.getString(modelColumn.getColumnName());
-//                                if (uuidStr != null && !uuidStr.isEmpty()) {
-//                                    DrawableNodeDAO drawableNodeDAO = new DrawableNodeDAO();
-//                                    DrawableNode drawableNode = drawableNodeDAO.getDrawableNodeUnknownClassFromUuid(DAO.UUIDFromString(uuidStr));
-//                                    modelColumn.getObjectLoadMethod().invoke(dbObject, drawableNode);
-//                                }
                             } else if (loadParameterClass.equals(EncodedProgress.class)) { // ENCODED PROGRESS
                                 String uuidStr = resultRow.getString(modelColumn.getColumnName());
                                 if (uuidStr != null && !uuidStr.isEmpty()) {

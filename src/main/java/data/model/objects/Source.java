@@ -3,6 +3,7 @@ package data.model.objects;
 import data.model.DatabaseObject;
 import data.model.objects.json.JSONMappable;
 import org.apache.log4j.Logger;
+import org.json.JSONObject;
 
 import java.util.UUID;
 
@@ -13,16 +14,18 @@ public class Source extends DatabaseObject {
     private String name = "";
     private String url = "";
     private EncodedProgress encodedProgress;
+    private JSONObject sourceInfo;
 
     public Source() {
         super();
     }
 
-    public Source(UUID uuid, String fileName, String url, String name) {
+    public Source(UUID uuid, String fileName, String url, String name, JSONObject sourceInfo) {
         super(uuid);
         this.fileName = fileName;
         this.url = url;
         this.name = name;
+        this.sourceInfo = sourceInfo;
     }
 
     public String getFileName() {
@@ -65,5 +68,13 @@ public class Source extends DatabaseObject {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public JSONObject getSourceInfo() {
+        return sourceInfo;
+    }
+
+    public void setSourceInfo(JSONObject sourceInfo) {
+        this.sourceInfo = sourceInfo;
     }
 }

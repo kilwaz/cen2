@@ -3,6 +3,7 @@ package data;
 import error.Error;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
+import org.json.JSONObject;
 
 import java.io.InputStream;
 import java.sql.PreparedStatement;
@@ -166,6 +167,8 @@ public class DataBank {
                 } else if (value instanceof DateTime) {
                     java.sql.Date date = new java.sql.Date(((DateTime) value).getMillis());
                     preparedStatement.setDate(valueCount, date);
+                } else if (value instanceof JSONObject) {
+                    preparedStatement.setString(valueCount, value.toString());
                 } else if (value == null) {
                     preparedStatement.setObject(valueCount, null);
                 }

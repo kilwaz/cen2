@@ -4,6 +4,7 @@ package data.model.links;
 import data.model.DatabaseLink;
 import data.model.objects.EncodedProgress;
 import data.model.objects.Source;
+import org.json.JSONObject;
 
 import java.util.UUID;
 
@@ -17,5 +18,6 @@ public class SourceDatabaseLink extends DatabaseLink {
         link("url", method("getUrl"), method("setUrl", String.class)); // 3
         link("name", method("getName"), method("setName", String.class)); // 4
         link("encoded_progress_id", method("getEncodedProgressUUID"), method("setEncodedProgress", EncodedProgress.class)); // 5
+        link("source_info_json", method("getSourceInfo"), method("setSourceInfo", JSONObject.class)); // 6
     }
 }

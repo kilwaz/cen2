@@ -15,6 +15,8 @@ create table source(
     url varchar(1000),
     name varchar(200),
     encoded_progress_id char(36),
+    source_info_json varchar(4000)
+    CHECK (source_info_json IS NULL OR JSON_VALID(source_info_json)),
     PRIMARY KEY (uuid));
 
 create table encoded_progress(
@@ -24,10 +26,6 @@ create table encoded_progress(
     pass_1_file_name varchar(1000),
     pass_2_progress int,
     pass_2_file_name varchar(1000),
-    PRIMARY KEY (uuid));
-
-create table source_info(
-    uuid char(36) NOT NULL,
     PRIMARY KEY (uuid));
 
 create table person(
