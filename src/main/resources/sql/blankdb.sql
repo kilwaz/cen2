@@ -1,9 +1,13 @@
+drop table if exists encoded_progress;
+drop table if exists source_info;
 drop table if exists source;
 drop table if exists person;
 drop table if exists picture;
 drop table if exists clip;
 drop table if exists process;
-drop table if exists encoded_progress;
+
+drop table if exists flyway_testing_migrate;
+drop table if exists flyway_schema_history;
 
 create table source(
     uuid char(36) NOT NULL,
@@ -20,6 +24,10 @@ create table encoded_progress(
     pass_1_file_name varchar(1000),
     pass_2_progress int,
     pass_2_file_name varchar(1000),
+    PRIMARY KEY (uuid));
+
+create table source_info(
+    uuid char(36) NOT NULL,
     PRIMARY KEY (uuid));
 
 create table person(

@@ -52,14 +52,11 @@ public class Source extends DatabaseObject {
     }
 
     public void setEncodedProgress(EncodedProgress encodedProgress) {
-        log.info("Set the encoded progress " + encodedProgress.getUuidString());
         this.encodedProgress = encodedProgress;
     }
 
     public String getEncodedProgressUUID() {
-        log.info("Trying to save encoded progress");
         if (encodedProgress != null) {
-            log.info("Returning the UUID!! " + encodedProgress.getUuidString());
             return encodedProgress.getUuidString();
         }
 

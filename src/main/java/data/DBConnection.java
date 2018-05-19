@@ -5,7 +5,7 @@ import error.Error;
 import org.apache.log4j.Logger;
 import org.flywaydb.core.Flyway;
 import org.flywaydb.core.api.FlywayException;
-import org.flywaydb.core.internal.dbsupport.FlywaySqlScriptException;
+import org.flywaydb.core.internal.sqlscript.FlywaySqlScriptException;
 import utils.SDEUtils;
 
 import java.io.File;

@@ -2,12 +2,15 @@ package core;
 
 import core.builders.requests.RequestMapper;
 import core.builders.resources.ResourceFileMapper;
+import org.apache.log4j.Logger;
 import utils.AppManager;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 public class ServiceListener implements ServletContextListener {
+
+    private static Logger log = Logger.getLogger(ServiceListener.class);
 
     public ServiceListener() {
 

@@ -51,9 +51,9 @@ public class ProcessListener extends ManagedRunnable {
             return;
         }
         try {
-            String line;
+            var line = "";
             while ((line = reader.readLine()) != null) {
-                LogMessage logMessage = new LogMessage()
+                var logMessage = new LogMessage()
                         .message(line)
                         .processorType(processorType)
                         .processHelper(processHelper);

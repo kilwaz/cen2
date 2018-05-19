@@ -25,7 +25,7 @@ public class DatabaseObject {
     }
 
     public static <DBObject extends DatabaseObject> DBObject load(UUID uuid, Class<DBObject> clazz) {
-        DatabaseObjectManager databaseObjectManager = DatabaseObjectManager.getInstance();
+        var databaseObjectManager = DatabaseObjectManager.getInstance();
         DatabaseObject loadedObject;
 
 //        try {

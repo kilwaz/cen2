@@ -19,7 +19,7 @@ public class DatabaseAction<DBObject extends DatabaseObject, DBLink extends Data
 
     public void save(DBObject dbObject, DBLink dbLink) {
         // Building the update query string
-        StringBuilder updateQueryBuilder = new StringBuilder();
+        var updateQueryBuilder = new StringBuilder();
         updateQueryBuilder.append("update ")
                 .append(dbLink.getTableName());
         Boolean firstColumn = true;
@@ -58,7 +58,7 @@ public class DatabaseAction<DBObject extends DatabaseObject, DBLink extends Data
         updateQuery.addParameter(dbObject.getUuidString());
 
         // Execute the update query
-        UpdateResult updateResult = (UpdateResult) updateQuery.execute();
+        var updateResult = (UpdateResult) updateQuery.execute();
 
         // If record does not exist insert a new one..
         if (updateResult.getResultNumber() == 0) {
@@ -100,7 +100,7 @@ public class DatabaseAction<DBObject extends DatabaseObject, DBLink extends Data
 
     public void delete(DBObject dbObject, DBLink dbLink) {
         // Create query object and fill in parameters
-        UpdateQuery deleteQuery = new UpdateQuery("delete from " + dbLink.getTableName() + " where uuid = ?");
+        var deleteQuery = new UpdateQuery("delete from " + dbLink.getTableName() + " where uuid = ?");
         for (ModelColumn modelColumn : dbLink.getModelColumns()) {
             try {
                 if ("uuid".equals(modelColumn.getColumnName())) {
@@ -117,9 +117,9 @@ public class DatabaseAction<DBObject extends DatabaseObject, DBLink extends Data
 
     public void load(DBObject dbObject, DBLink dbLink) {
         // Building the select query string
-        StringBuilder selectQueryBuilder = new StringBuilder();
+        var selectQueryBuilder = new StringBuilder();
         selectQueryBuilder.append("select ");
-        Boolean firstColumn = true;
+        var firstColumn = true;
         for (ModelColumn modelColumn : dbLink.getModelColumns()) {
             if (firstColumn) {
                 selectQueryBuilder
