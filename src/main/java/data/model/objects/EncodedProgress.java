@@ -1,10 +1,12 @@
 package data.model.objects;
 
 import data.model.DatabaseObject;
+import data.model.objects.json.JSONMappable;
 
 import java.util.UUID;
 
 public class EncodedProgress extends DatabaseObject {
+    private Integer totalFrames = -1;
     private Integer passPhase = -1;
     private Integer pass1Progress = -1;
     private String pass1FileName = "";
@@ -15,8 +17,9 @@ public class EncodedProgress extends DatabaseObject {
         super();
     }
 
-    public EncodedProgress(UUID uuid, Integer passPhase, Integer pass1Progress, String pass1FileName, Integer pass2Progress, String pass2FileName) {
+    public EncodedProgress(UUID uuid, Integer totalFrames, Integer passPhase, Integer pass1Progress, String pass1FileName, Integer pass2Progress, String pass2FileName) {
         super(uuid);
+        this.totalFrames = totalFrames;
         this.passPhase = passPhase;
         this.pass1Progress = pass1Progress;
         this.pass1FileName = pass1FileName;
@@ -24,6 +27,7 @@ public class EncodedProgress extends DatabaseObject {
         this.pass2FileName = pass2FileName;
     }
 
+    @JSONMappable("passPhase")
     public Integer getPassPhase() {
         return passPhase;
     }
@@ -32,6 +36,7 @@ public class EncodedProgress extends DatabaseObject {
         this.passPhase = passPhase;
     }
 
+    @JSONMappable("pass1Progress")
     public Integer getPass1Progress() {
         return pass1Progress;
     }
@@ -48,6 +53,7 @@ public class EncodedProgress extends DatabaseObject {
         this.pass1FileName = pass1FileName;
     }
 
+    @JSONMappable("pass2Progress")
     public Integer getPass2Progress() {
         return pass2Progress;
     }
@@ -62,6 +68,15 @@ public class EncodedProgress extends DatabaseObject {
 
     public void setPass2FileName(String pass2FileName) {
         this.pass2FileName = pass2FileName;
+    }
+
+    @JSONMappable("totalFrames")
+    public Integer getTotalFrames() {
+        return totalFrames;
+    }
+
+    public void setTotalFrames(Integer totalFrames) {
+        this.totalFrames = totalFrames;
     }
 }
 

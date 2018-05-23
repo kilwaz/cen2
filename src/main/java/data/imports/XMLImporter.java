@@ -1,6 +1,7 @@
 package data.imports;
 
 import core.process.Probe;
+import data.model.objects.EncodedProgress;
 import data.model.objects.Source;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
@@ -59,10 +60,15 @@ public class XMLImporter {
                     log.info("URL = " + url);
 
                     Source newSource = Source.create(Source.class);
+                    EncodedProgress newEncodedProgress = EncodedProgress.create(EncodedProgress.class);
+                    newEncodedProgress.setPassPhase(0);
+
                     newSource.setFileName(fileName);
                     newSource.setName(name);
                     newSource.setUrl(url);
+                    newSource.setEncodedProgress(newEncodedProgress);
                     newSource.save();
+                    newEncodedProgress.save();
 
                     Probe probe = new Probe().source(newSource);
                     probe.execute();

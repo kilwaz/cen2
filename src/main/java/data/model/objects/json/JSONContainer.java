@@ -1,5 +1,6 @@
 package data.model.objects.json;
 
+import error.Error;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -69,9 +70,13 @@ public class JSONContainer<DatabaseObject> {
             return new JSONObject(rawData);
         } catch (JSONException ex) {
             try {
-                new JSONArray(rawData);
+                if (rawData != null && !rawData.isEmpty()) {
+                    new JSONObject(rawData);
+                } else {
+                    new JSONObject();
+                }
             } catch (JSONException ex1) {
-                ex1.printStackTrace();
+                Error.NOT_VALID_JSON.record().additionalInformation("JSON - " + rawData).create(ex1);
             }
         }
         return new JSONObject();

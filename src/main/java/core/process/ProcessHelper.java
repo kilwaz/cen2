@@ -69,6 +69,8 @@ public class ProcessHelper extends ManagedRunnable {
             if (outputListener != null) {
                 outputListener.close();
             }
+
+            completeProcess();
         }
     }
 

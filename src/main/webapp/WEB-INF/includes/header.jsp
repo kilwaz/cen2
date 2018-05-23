@@ -14,6 +14,6 @@
 
     <script src="https://resources.kilwaz.me/js/jquery-3.3.1.min.js"></script>
     <script src="https://resources.kilwaz.me/js/bootstrap-4.1.1.min.js"></script>
-    <script src="https://resources.kilwaz.me/js/angular-1.6.9.min.js"></script>
+    <script src="https://resources.kilwaz.me/js/angular-1.6.10.min.js"></script>
 </head>
 <body>

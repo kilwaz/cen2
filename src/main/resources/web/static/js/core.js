@@ -29,7 +29,7 @@ resetDatabaseApp.controller('resetDatabaseCtrl', function ($scope, $http) {
     }
 });
 
-sourceVideoApp.controller('sourceVideoCtrl', function ($scope, $http) {
+sourceVideoApp.controller('sourceVideoCtrl', function ($scope, $http, $filter) {
     $scope.currentTime = 0;
     $scope.timeHourTens = 0;
     $scope.timeHourOnes = 0;
@@ -49,10 +49,10 @@ sourceVideoApp.controller('sourceVideoCtrl', function ($scope, $http) {
         document.getElementsByTagName("video")[0].currentTime = $scope.convertToSeconds();
     };
 
-    $scope.probeSource = function () {
+    $scope.sourceInfo = function (sourceRef) {
         var requestData = $.param({
             json: JSON.stringify({
-                ref: $scope.selectedVideoRef
+                ref: sourceRef
             })
         });
 
@@ -62,10 +62,13 @@ sourceVideoApp.controller('sourceVideoCtrl', function ($scope, $http) {
             }
         };
 
-        $http.post("probeSource", requestData, config)
+        $http.post("sourceInfoJSON", requestData, config)
             .then(
                 function (response) {
-                    // success callback
+                    var selectedSource = $filter('filter')($scope.sources, {'uuid': sourceRef});
+                    if (selectedSource.length === 1) {
+                        selectedSource[0].sourceInfo = response.data;
+                    }
                 },
                 function (response) {
                     // failure callback
@@ -124,10 +127,11 @@ sourceVideoApp.controller('sourceVideoCtrl', function ($scope, $http) {
 
 sourceVideoApp.directive('sourceChange', function () {
     return {
-        link: function link(scope, element) {
+        link: function link($scope, element) {
             element.bind('change', function () {
-                scope.selectedVideoRef = element[0].selectedOptions[0].dataset.ref;
-                console.log(element[0].selectedOptions[0].dataset.ref);
+                var selectedSource = element[0].selectedOptions[0].dataset;
+                $scope.selectedVideoRef = selectedSource.ref;
+                $scope.sourceInfo(selectedSource.ref);
             });
         }
     }

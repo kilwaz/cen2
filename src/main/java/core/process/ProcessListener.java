@@ -1,5 +1,6 @@
 package core.process;
 
+import error.Error;
 import org.apache.log4j.Logger;
 
 import java.io.*;
@@ -48,6 +49,7 @@ public class ProcessListener extends ManagedRunnable {
 
     private void listen() {
         if (reader == null) {
+            completeProcess();
             return;
         }
         try {
@@ -59,13 +61,15 @@ public class ProcessListener extends ManagedRunnable {
                         .processHelper(processHelper));
             }
         } catch (IOException ex) {
-            ex.printStackTrace();
+            Error.PROCESS_LISTEN.record().create(ex);
         } finally {
             logPublisher.submit(new LogMessage()
                     .processorType(processorType)
                     .processHelper(processHelper)
                     .finalMessage(true));
             logPublisher.close();
+
+            completeProcess();
         }
     }
 

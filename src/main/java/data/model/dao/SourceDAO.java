@@ -46,6 +46,20 @@ public class SourceDAO {
         return sources;
     }
 
+    @JSONDataSource("allRawSources")
+    public List<Source> getRawSources() {
+        List<Source> sources = new ArrayList<>();
+
+        SelectResult selectResult = (SelectResult) new SelectQuery("select s.uuid from source s, encoded_progress ep where s.encoded_progress_id = ep.uuid and pass_phase < 2").execute();
+
+        for (SelectResultRow resultRow : selectResult.getResults()) {
+            String uuid = resultRow.getString("uuid");
+            sources.add(Source.load(DAO.UUIDFromString(uuid), Source.class));
+        }
+
+        return sources;
+    }
+
     public Source getSourceByUUID(String uuid) {
         return Source.load(DAO.UUIDFromString(uuid), Source.class);
     }

@@ -12,15 +12,18 @@ drop table if exists flyway_schema_history;
 create table source(
     uuid char(36) NOT NULL,
     file_name varchar(1000),
+    encoded_file_name varchar(1000),
     url varchar(1000),
+    encoded_url varchar(1000),
     name varchar(200),
     encoded_progress_id char(36),
-    source_info_json varchar(4000)
+    source_info_json varchar(8000)
     CHECK (source_info_json IS NULL OR JSON_VALID(source_info_json)),
     PRIMARY KEY (uuid));
 
 create table encoded_progress(
     uuid char(36) NOT NULL,
+    total_frames int,
     pass_phase int,
     pass_1_progress int,
     pass_1_file_name varchar(1000),

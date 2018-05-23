@@ -57,8 +57,26 @@
                     </option>
                 </select>
 
-                <button type="button" class="btn btn-primary" ng-click="probeSource()">Probe</button>
                 <button type="button" class="btn btn-primary" ng-click="encodeSource()">Encode</button>
+
+                <table id="searchTextResults">
+                    <tr>
+                        <th>Duration</th>
+                        <th>Format</th>
+                        <th>Bit rate</th>
+                        <th>Resolution</th>
+                        <th>Aspect Ratio</th>
+                        <th>FPS</th>
+                    </tr>
+                    <tr ng-repeat="source in sources | filter : (!!selectedVideoRef || undefined) && {'uuid':selectedVideoRef}">
+                        <td>{{source.sourceInfo.format.duration | number : 2}}</td>
+                        <td>{{source.sourceInfo.format.format_long_name}}</td>
+                        <td>{{source.sourceInfo.format.bit_rate}}</td>
+                        <td>{{source.sourceInfo.streams[0].width}} x {{source.sourceInfo.streams[0].height}}</td>
+                        <td>{{source.sourceInfo.streams[0].display_aspect_ratio}}</td>
+                        <td>{{source.sourceInfo.streams[0].avg_frame_rate}}</td>
+                    </tr>
+                </table>
 
                 <video id="player" class="embed-responsive" controls source-video
                        video-current-time="currentTime"
@@ -84,7 +102,7 @@
                 <input type="button" value="Mark" ng-click="createMark()"/>
 
                 <br/>
-                <input type="number" min="0" max="1" ng-change="setSourceSpeed()" ng-model="playBackSpeed"/>
+                <input type="number" min="0" max="10" ng-change="setSourceSpeed()" ng-model="playBackSpeed"/>
 
                 <br/>
                 <p>Marks:</p>

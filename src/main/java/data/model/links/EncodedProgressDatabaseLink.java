@@ -12,11 +12,12 @@ public class EncodedProgressDatabaseLink extends DatabaseLink {
 
         // Make sure the order is the same as column order in database
         link("uuid", method("getUuidString"), method("setUuid", UUID.class)); // 1
-        link("pass_phase", method("getPassPhase"), method("setPassPhase", Integer.class)); // 2
-        link("pass_1_progress", method("getPass1Progress"), method("setPass1Progress", Integer.class)); // 3
-        link("pass_1_file_name", method("getPass1FileName"), method("setPass1FileName", String.class)); // 4
-        link("pass_2_progress", method("getPass2Progress"), method("setPass2Progress", Integer.class)); // 5
-        link("pass_2_file_name", method("getPass2FileName"), method("setPass2FileName", String.class)); // 6
+        link("total_frames", method("getTotalFrames"), method("setTotalFrames", Integer.class)); // 2
+        link("pass_phase", method("getPassPhase"), method("setPassPhase", Integer.class)); // 3
+        link("pass_1_progress", method("getPass1Progress"), method("setPass1Progress", Integer.class)); // 4
+        link("pass_1_file_name", method("getPass1FileName"), method("setPass1FileName", String.class)); // 5
+        link("pass_2_progress", method("getPass2Progress"), method("setPass2Progress", Integer.class)); // 6
+        link("pass_2_file_name", method("getPass2FileName"), method("setPass2FileName", String.class)); // 7
     }
 }
 

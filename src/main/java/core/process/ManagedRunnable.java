@@ -34,4 +34,8 @@ public class ManagedRunnable implements Runnable {
         process.setIsCommandLine(isCommandLine);
         process.save();
     }
+
+    public void completeProcess() {
+        process.delete();
+    }
 }

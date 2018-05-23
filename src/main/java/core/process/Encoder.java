@@ -15,6 +15,8 @@ public class Encoder implements Flow.Subscriber<LogMessage> {
     private ManagedThread managedThread;
     private ProcessHelper processHelper;
 
+    private Integer pass = 0;
+
     private List<Flow.Subscription> subscriptions = new ArrayList<>();
 
     public Encoder() {
@@ -26,6 +28,11 @@ public class Encoder implements Flow.Subscriber<LogMessage> {
         return this;
     }
 
+    public Encoder pass(Integer pass) {
+        this.pass = pass;
+        return this;
+    }
+
     public void execute() {
         encodedProgress = EncodedProgress.create(EncodedProgress.class);
         encodedProgress.setPassPhase(1);
@@ -33,7 +40,12 @@ public class Encoder implements Flow.Subscriber<LogMessage> {
         source.setEncodedProgress(encodedProgress);
         source.save();
 
-        String command = "/usr/bin/ffmpeg -y -i " + source.getFileName() + " -c:v libvpx-vp9 -pass 1 -passlogfile /home/kilwaz/" + source.getUuidString() + " -b:v 1000K -threads 8 -speed 4 -tile-columns 6 -frame-parallel 1 -an -f webm /dev/null";
+        String command = "";
+        if (pass.equals(1)) {
+            command = "/usr/bin/ffmpeg -y -i " + source.getFileName() + " -c:v libvpx-vp9 -pass " + pass + " -passlogfile /home/kilwaz/" + source.getUuidString() + " -b:v 1000K -threads 8 -speed 4 -tile-columns 6 -frame-parallel 1 -an -f webm /dev/null";
+        } else {
+            command = "/usr/bin/ffmpeg -y -i " + source.getFileName() + " -c:v libvpx-vp9 -pass " + pass + " -passlogfile /home/kilwaz/" + source.getUuidString() + " -b:v 1000K -threads 8 -speed 4 -tile-columns 6 -frame-parallel 1 -an -f webm /home/kilwaz/" + source.getUuidString();
+        }
 
         processHelper = new ProcessHelper()
                 .command(command)

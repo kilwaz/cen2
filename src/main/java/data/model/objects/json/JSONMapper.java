@@ -1,5 +1,6 @@
 package data.model.objects.json;
 
+import data.model.DatabaseObject;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -8,10 +9,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
-public class JSONMapper<DatabaseObject> {
+public class JSONMapper<DBO extends DatabaseObject> {
     private static Logger log = Logger.getLogger(JSONMapper.class);
 
-    public JSONObject process(DatabaseObject databaseObject) {
+    public JSONObject process(DBO databaseObject) {
         JSONObject jsonObject = new JSONObject();
         Class mappingClass = databaseObject.getClass();
 
@@ -21,7 +22,13 @@ public class JSONMapper<DatabaseObject> {
             JSONMappable jsonMappable = method.getAnnotation(JSONMappable.class);
             if (jsonMappable != null) { // Mappable annotation exists
                 try {
-                    jsonObject.put(jsonMappable.value(), method.invoke(databaseObject));
+                    // If there is a child class that is another database object, run the same process and then store the JSONObject returned
+                    if (method.getReturnType().getSuperclass().equals(DatabaseObject.class)) {
+                        JSONObject childDBOJSON = process((DBO) method.invoke(databaseObject));
+                        jsonObject.put(jsonMappable.value(), childDBOJSON);
+                    } else {
+                        jsonObject.put(jsonMappable.value(), method.invoke(databaseObject));
+                    }
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     e.printStackTrace();
                 }
@@ -31,10 +38,10 @@ public class JSONMapper<DatabaseObject> {
         return jsonObject;
     }
 
-    public JSONArray process(List<DatabaseObject> databaseObjectList) {
+    public JSONArray process(List<DBO> databaseObjectList) {
         JSONArray objects = new JSONArray();
 
-        for (DatabaseObject databaseObject : databaseObjectList) {
+        for (DBO databaseObject : databaseObjectList) {
             objects.put(process(databaseObject));
         }
 

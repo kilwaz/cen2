@@ -36,9 +36,9 @@ public class RequestFilter implements Filter {
                     ctor = requestMapping.getRequestClass().getConstructor();
                     Request requestClass = (Request) ctor.newInstance();
 
-                    if("GET".equals(request.getMethod())){
+                    if ("GET".equals(request.getMethod())) {
                         requestClass.doGet(request, response);
-                    } else if("POST".equals(request.getMethod())){
+                    } else if ("POST".equals(request.getMethod())) {
                         requestClass.doPost(request, response);
                     }
 
@@ -47,7 +47,6 @@ public class RequestFilter implements Filter {
                         requestDispatcher.forward(servletRequest, servletResponse);
                     } else if (requestMapping.getRequestType().equals(RequestMapping.REQUEST_TYPE_JSON)) {
                         response.setContentType("application/json");
-                        log.info("Setting the response type as json");
                     }
                 } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
                     e.printStackTrace();

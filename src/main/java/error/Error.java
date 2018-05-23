@@ -28,7 +28,9 @@ public enum Error {
     DATA_LINK_METHOD_NOT_FOUND(87, "While creating the database model we could not find a required method"),
     DATABASE_OBJECT_METHOD_NOT_FOUND(88, "Could not find method for DatabaseObject when trying to update database"),
     FILE_UPLOAD_ERROR(89, "File could not be uploaded"),
-    SDE_JOIN_THREAD(58, "Error joining SDE Thread");
+    SDE_JOIN_THREAD(58, "Error joining SDE Thread"),
+    NOT_VALID_JSON(32, "Not valid JSON"),
+    PROCESS_LISTEN(33, "Exception listening to process"),;
 
     private Integer code;
     private String description;

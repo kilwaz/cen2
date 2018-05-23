@@ -2,12 +2,12 @@ package core.builders.requests;
 
 import org.apache.log4j.Logger;
 import requests.actions.EncodeSource;
-import requests.actions.ProbeSource;
 import requests.actions.ResetDatabase;
 import requests.annotations.Action;
 import requests.annotations.JSON;
 import requests.annotations.JSP;
 import requests.annotations.RequestName;
+import requests.json.SourceInfoJSON;
 import requests.json.SourcesJSON;
 import requests.pages.DatabaseAdmin;
 import requests.pages.Hello;
@@ -27,10 +27,10 @@ public class RequestMapper {
         build(DatabaseAdmin.class);
         build(SourcesJSON.class);
         build(ResetDatabase.class);
-        build(ProbeSource.class);
         build(Import.class);
         build(EncodeSource.class);
         build(Processes.class);
+        build(SourceInfoJSON.class);
     }
 
     private static void build(Class requestClass) {

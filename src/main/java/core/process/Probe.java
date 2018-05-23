@@ -29,6 +29,8 @@ public class Probe implements Flow.Subscriber<LogMessage> {
     public void execute() {
         String command = "/usr/bin/ffprobe -v quiet -print_format json -show_format -show_streams " + source.getFileName();
 
+        log.info("Probe command = " + command);
+
         processHelper = new ProcessHelper()
                 .command(command)
                 .processDescription("Probing " + source.getFileName())
@@ -51,8 +53,38 @@ public class Probe implements Flow.Subscriber<LogMessage> {
         if (ProcessListener.PROCESSOR_INPUT.equals(item.getProcessorType())) {
             if (item.isFinalMessage()) {
                 var jsonContainer = new JSONContainer(jsonResult.toString());
-                source.setSourceInfo(jsonContainer.toJSONObject());
+                var probeJSON = jsonContainer.toJSONObject();
+                source.setSourceInfo(probeJSON);
                 source.save();
+
+                // Find the total number of frames calculated from average frame rate and duration
+                if (probeJSON.has("streams") && probeJSON.has("format")) {
+                    var formatJSON = probeJSON.getJSONObject("format");
+                    var streamArray = probeJSON.getJSONArray("streams");
+
+                    if (formatJSON.has("duration")) {
+                        var duration = formatJSON.getDouble("duration");
+
+                        if (streamArray.length() > 0) {
+                            var videoStreamJSON = streamArray.getJSONObject(0);
+                            if (videoStreamJSON.has("avg_frame_rate")) {
+                                var avgFrameRate = videoStreamJSON.getString("avg_frame_rate");
+                                var frameRateSplit = avgFrameRate.split("/");
+
+                                if (frameRateSplit.length == 2) {
+                                    var firstSum = Double.parseDouble(frameRateSplit[0]);
+                                    var secondSum = Double.parseDouble(frameRateSplit[1]);
+
+                                    Double totalFrames = duration * (firstSum / secondSum);
+                                    log.info(duration + " * " + firstSum + "/" + secondSum + " = " + (firstSum / secondSum) + " = " + totalFrames);
+                                    var encodedProgress = source.getEncodedProgress();
+                                    encodedProgress.setTotalFrames(totalFrames.intValue());
+                                    encodedProgress.save();
+                                }
+                            }
+                        }
+                    }
+                }
             } else {
                 jsonResult.append(item.getMessage());
             }

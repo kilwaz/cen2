@@ -4,6 +4,7 @@ import core.Request;
 import core.process.Encoder;
 import data.model.dao.SourceDAO;
 import data.model.objects.Source;
+import data.model.objects.json.JSONContainer;
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
 import requests.annotations.Action;
@@ -22,19 +23,16 @@ public class EncodeSource extends Request {
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) {
-        String jsonString = request.getParameter("json");
+        super.doPost(request, response);
+        JSONContainer incomingRequestData = getIncomingRequestData();
+        JSONObject jsonObject = incomingRequestData.toJSONObject();
 
-        log.info("Encoding...");
-
-        if (jsonString != null) {
-            JSONObject jsonObject = new JSONObject(jsonString);
+        if (jsonObject.has("ref")) {
             SourceDAO sourceDAO = new SourceDAO();
             Source source = sourceDAO.getSourceByUUID(jsonObject.getString("ref"));
 
             Encoder encoder = new Encoder().source(source);
             encoder.execute();
         }
-
-        log.info("Encoding source request returned");
     }
 }

@@ -24,7 +24,7 @@ public class ProcessDAO {
 
     @JSONDataSource("allCommandLineProcesses")
     public List<Process> getCommandLineProcesses() {
-        return retrieveProcessList((SelectQuery) new SelectQuery("select uuid from process where isCommandLine = ?").addParameter(Boolean.TRUE));
+        return retrieveProcessList((SelectQuery) new SelectQuery("select uuid from process where is_command_line = ?").addParameter(Boolean.TRUE));
     }
 
     private List<Process> retrieveProcessList(SelectQuery selectQuery) {
