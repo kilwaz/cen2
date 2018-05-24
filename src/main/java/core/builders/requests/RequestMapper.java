@@ -7,6 +7,7 @@ import requests.annotations.Action;
 import requests.annotations.JSON;
 import requests.annotations.JSP;
 import requests.annotations.RequestName;
+import requests.json.EncodedProgressJSON;
 import requests.json.SourceInfoJSON;
 import requests.json.SourcesJSON;
 import requests.pages.DatabaseAdmin;
@@ -31,6 +32,7 @@ public class RequestMapper {
         build(EncodeSource.class);
         build(Processes.class);
         build(SourceInfoJSON.class);
+        build(EncodedProgressJSON.class);
     }
 
     private static void build(Class requestClass) {

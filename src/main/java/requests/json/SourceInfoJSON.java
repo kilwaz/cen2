@@ -23,9 +23,9 @@ public class SourceInfoJSON extends Request {
         JSONContainer incomingRequestData = getIncomingRequestData();
         JSONObject jsonObject = incomingRequestData.toJSONObject();
 
-        if (jsonObject.has("ref")) {
+        if (jsonObject.has("uuid")) {
             SourceDAO sourceDAO = new SourceDAO();
-            Source source = sourceDAO.getSourceByUUID(jsonObject.getString("ref"));
+            Source source = sourceDAO.getSourceByUUID(jsonObject.getString("uuid"));
 
             JSONContainer jsonContainer = new JSONContainer(source.getSourceInfo());
             jsonContainer.writeToResponse(response);

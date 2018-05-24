@@ -28,22 +28,38 @@
                                 <p class="card-text">URL: {{source.url}}</p>
                             </div>
                             <div class="row">
-                                <p class="card-text">Encoded URL: {{source.encodedUrl}}</p>
-                            </div>
-                            <div class="row">
-                                {{source.sourceInfo.format.duration | number : 2}}
+                                {{calcDuration(source)}}
                                 {{source.sourceInfo.format.format_long_name}}
-                                {{source.sourceInfo.streams[0].width}} x {{source.sourceInfo.streams[0].height}}
+                                {{calcResolution(source)}}
                                 {{source.sourceInfo.streams[0].display_aspect_ratio}}
-                                {{source.sourceInfo.streams[0].avg_frame_rate}}
-                                {{source.encodedProgress.totalFrames}}
                             </div>
                             <div class="row">
                                 <div ng-if="source.encodedProgress.passPhase == 0">
-                                    <a href="#" class="btn btn-primary">Start pass 1</a>
+                                    <button type="button" class="btn btn-primary"
+                                            ng-click="encodeSource(1, source)">Start pass 1
+                                    </button>
                                 </div>
                                 <div ng-if="source.encodedProgress.passPhase == 1">
-                                    <a href="#" class="btn btn-primary">Start pass 2</a>
+                                    <button type="button" class="btn btn-primary"
+                                            ng-click="encodeSource(2, source)">Start pass 2
+                                    </button>
+                                </div>
+                                <div>
+                                    <button type="button" class="btn btn-primary"
+                                            ng-click="updateEncodedProgress(source)">Refresh Progress
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar"
+                                     ng-style="{'width' : calcPercentEncoded(source, 1) + '%'}" aria-valuemin="0" aria-valuemax="100">
+                                    {{calcPercentEncoded(source, 1) | number:2}}%
+                                </div>
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar"
+                                     ng-style="{'width' : calcPercentEncoded(source, 2) + '%'}" aria-valuemin="0" aria-valuemax="100">
+                                    {{calcPercentEncoded(source, 2) | number:2}}%
                                 </div>
                             </div>
                         </div>

@@ -76,30 +76,6 @@ sourceVideoApp.controller('sourceVideoCtrl', function ($scope, $http, $filter) {
             );
     };
 
-    $scope.encodeSource = function () {
-        var requestData = $.param({
-            json: JSON.stringify({
-                ref: $scope.selectedVideoRef
-            })
-        });
-
-        var config = {
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
-            }
-        };
-
-        $http.post("encodeSource", requestData, config)
-            .then(
-                function (response) {
-                    // success callback
-                },
-                function (response) {
-                    // failure callback
-                }
-            );
-    };
-
     $scope.convertToSeconds = function () {
         return $scope.timeSecOnes
             + ($scope.timeSecTens * 10)

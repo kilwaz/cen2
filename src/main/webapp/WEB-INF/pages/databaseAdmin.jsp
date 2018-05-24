@@ -57,8 +57,6 @@
                     </option>
                 </select>
 
-                <button type="button" class="btn btn-primary" ng-click="encodeSource()">Encode</button>
-
                 <table id="searchTextResults">
                     <tr>
                         <th>Duration</th>
