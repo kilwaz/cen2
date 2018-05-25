@@ -3,6 +3,7 @@ package core.builders.requests;
 import org.apache.log4j.Logger;
 import requests.actions.EncodeSource;
 import requests.actions.ResetDatabase;
+import requests.actions.SplitSource;
 import requests.annotations.Action;
 import requests.annotations.JSON;
 import requests.annotations.JSP;
@@ -33,6 +34,7 @@ public class RequestMapper {
         build(Processes.class);
         build(SourceInfoJSON.class);
         build(EncodedProgressJSON.class);
+        build(SplitSource.class);
     }
 
     private static void build(Class requestClass) {

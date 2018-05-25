@@ -76,6 +76,32 @@ sourceVideoApp.controller('sourceVideoCtrl', function ($scope, $http, $filter) {
             );
     };
 
+    $scope.splitSource = function () {
+        var requestData = $.param({
+            json: JSON.stringify({
+                uuid: $scope.selectedVideoRef,
+                startTime: 0.0,
+                endTime: 10.0
+            })
+        });
+
+        var config = {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
+            }
+        };
+
+        $http.post("splitSource", requestData, config)
+            .then(
+                function (response) {
+
+                },
+                function (response) {
+                    // failure callback
+                }
+            );
+    };
+
     $scope.convertToSeconds = function () {
         return $scope.timeSecOnes
             + ($scope.timeSecTens * 10)

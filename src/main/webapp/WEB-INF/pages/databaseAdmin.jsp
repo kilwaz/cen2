@@ -103,6 +103,9 @@
                 <input type="number" min="0" max="10" ng-change="setSourceSpeed()" ng-model="playBackSpeed"/>
 
                 <br/>
+
+                <input type="button" value="Split" ng-click="splitSource()"/>
+
                 <p>Marks:</p>
                 <ul ng-repeat="mark in marks">
                     <li ng-repeat="time in mark">

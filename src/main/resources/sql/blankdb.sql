@@ -50,5 +50,7 @@ create table picture(
 create table clip(
     uuid char(36) NOT NULL,
     source char(36),
-    clip_length int,
+    start_time double,
+    end_time double,
+    file_name varchar(1000),
     PRIMARY KEY (uuid));

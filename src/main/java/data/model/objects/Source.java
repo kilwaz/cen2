@@ -100,4 +100,8 @@ public class Source extends DatabaseObject {
     public void setEncodedUrl(String encodedUrl) {
         this.encodedUrl = encodedUrl;
     }
+
+    public String getFileExtension() {
+        return fileName.substring(fileName.lastIndexOf(".") + 1);
+    }
 }

@@ -1,8 +1,10 @@
 package data.model;
 
+import data.model.links.ClipDatabaseLink;
 import data.model.links.EncodedProgressDatabaseLink;
 import data.model.links.ProcessDatabaseLink;
 import data.model.links.SourceDatabaseLink;
+import data.model.objects.Clip;
 import data.model.objects.EncodedProgress;
 import data.model.objects.Process;
 import data.model.objects.Source;
@@ -21,6 +23,7 @@ public class DatabaseLink {
         linkClasses.put(Source.class, SourceDatabaseLink.class);
         linkClasses.put(Process.class, ProcessDatabaseLink.class);
         linkClasses.put(EncodedProgress.class, EncodedProgressDatabaseLink.class);
+        linkClasses.put(Clip.class, ClipDatabaseLink.class);
     }
 
     private String tableName = "";

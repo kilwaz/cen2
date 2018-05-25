@@ -1,6 +1,6 @@
 package data.imports;
 
-import core.process.Probe;
+import core.process.Prober;
 import data.model.objects.EncodedProgress;
 import data.model.objects.Source;
 import org.apache.log4j.Logger;
@@ -70,8 +70,8 @@ public class XMLImporter {
                     newSource.save();
                     newEncodedProgress.save();
 
-                    Probe probe = new Probe().source(newSource);
-                    probe.execute();
+                    Prober prober = new Prober().source(newSource);
+                    prober.execute();
                 }
             }
         } catch (ParserConfigurationException | SAXException | IOException ex) {

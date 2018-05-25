@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Flow;
 
-public class Probe implements Flow.Subscriber<LogMessage> {
-    private static Logger log = Logger.getLogger(Probe.class);
+public class Prober implements Flow.Subscriber<LogMessage> {
+    private static Logger log = Logger.getLogger(Prober.class);
     private Source source;
     private ManagedThread managedThread;
     private ProcessHelper processHelper;
@@ -17,11 +17,11 @@ public class Probe implements Flow.Subscriber<LogMessage> {
 
     private List<Flow.Subscription> subscriptions = new ArrayList<>();
 
-    public Probe() {
+    public Prober() {
         super();
     }
 
-    public Probe source(Source source) {
+    public Prober source(Source source) {
         this.source = source;
         return this;
     }
@@ -29,7 +29,7 @@ public class Probe implements Flow.Subscriber<LogMessage> {
     public void execute() {
         String command = "/usr/bin/ffprobe -v quiet -print_format json -show_format -show_streams " + source.getFileName();
 
-        log.info("Probe command = " + command);
+        log.info("Prober command = " + command);
 
         processHelper = new ProcessHelper()
                 .command(command)

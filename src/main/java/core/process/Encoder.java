@@ -39,11 +39,19 @@ public class Encoder implements Flow.Subscriber<LogMessage> {
         source.setEncodedProgress(encodedProgress);
         source.save();
 
+//        CRF
+//        32   lowest
+//        29   very low
+//        26   low
+//        23   medium
+//        20   high
+//        17   perceptually lossless
+
         String command = "";
         if (pass.equals(1)) {
-            command = "/usr/bin/ffmpeg -y -i " + source.getFileName() + " -c:v libvpx-vp9 -pass " + pass + " -passlogfile /home/kilwaz/srcLog/" + source.getUuidString() + " -b:v 1000K -threads 8 -speed 4 -tile-columns 6 -frame-parallel 1 -an -f webm /dev/null";
+            command = "/usr/bin/ffmpeg -y -i " + source.getFileName() + " -c:v libvpx-vp9 -c:a libopus -pass " + pass + " -passlogfile /home/kilwaz/srcLog/" + source.getUuidString() + " -b:v 0 -deadline good -crf 17 -f webm /dev/null";
         } else if (pass.equals(2)) {
-            command = "/usr/bin/ffmpeg -y -i " + source.getFileName() + " -c:v libvpx-vp9 -pass " + pass + " -passlogfile /home/kilwaz/srcLog/" + source.getUuidString() + " -b:v 1000K -threads 8 -speed 4 -tile-columns 6 -frame-parallel 1 -an -f webm /home/kilwaz/srcDone/encoded-" + source.getUuidString();
+            command = "/usr/bin/ffmpeg -y -i " + source.getFileName() + " -c:v libvpx-vp9 -c:a libopus -pass " + pass + " -passlogfile /home/kilwaz/srcLog/" + source.getUuidString() + " -b:v 0 -deadline good -crf 17 -f webm /home/kilwaz/srcDone/encoded-" + source.getUuidString();
         }
 
         processHelper = new ProcessHelper()
