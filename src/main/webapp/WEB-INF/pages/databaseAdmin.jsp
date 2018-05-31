@@ -107,14 +107,17 @@
                 <input type="button" value="Split" ng-click="splitSource()"/>
 
                 <p>Marks:</p>
-                <ul ng-repeat="mark in marks">
-                    <li ng-repeat="time in mark">
-                        {{ time }} seconds.
-                    </li>
-                </ul>
+                <div ng-repeat="mark in marks" class="card">
+                    <div class="card-body">
+                        {{ mark.timeHourTens + '' + mark.timeHourOnes + 'h ' + mark.timeMinTens + '' +
+                        mark.timeMinOnes + 'm ' + mark.timeSecTens + '' + mark.timeSecOnes + 's ' +
+                        mark.timeFrameTens + '' + mark.timeFrameOnes + 'f'}}
+                        <input type="button" value="Delete" ng-click="deleteMark(mark)"/>
+                        <input type="button" value="Show" ng-click="jumpToMark(mark)"/>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 <jsp:include page="../includes/footer.jsp"/>
