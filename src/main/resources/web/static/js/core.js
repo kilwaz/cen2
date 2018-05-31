@@ -114,12 +114,43 @@ sourceVideoApp.controller('sourceVideoCtrl', function ($scope, $http, $filter) {
 
     $scope.createMark = function () {
         var newMark = {
-            time: 0
+            time: 0,
+            timeHourTens: 0,
+            timeHourOnes: 0,
+            timeMinTens: 0,
+            timeMinOnes: 0,
+            timeSecTens: 0,
+            timeSecOnes: 0,
+            timeFrameTens: 0,
+            timeFrameOnes: 0
         };
 
         newMark.time = $scope.convertToSeconds();
 
+        var timeHour = Math.floor(newMark.time / 3600);
+        newMark.timeHourTens = Math.floor(timeHour / 10 % 10);
+        newMark.timeHourOnes = Math.floor(timeHour % 10);
+        var timeMin = Math.floor((newMark.time / 60) % 60);
+        newMark.timeMinTens = Math.floor(timeMin / 10 % 10);
+        newMark.timeMinOnes = Math.floor(timeMin % 10);
+        var timeSec = Math.floor(newMark.time % 60);
+        newMark.timeSecTens = Math.floor(timeSec / 10 % 10);
+        newMark.timeSecOnes = Math.floor(timeSec % 10);
+        var timeFrame = Math.floor((newMark.time % 1) * frameRate);
+        newMark.timeFrameTens = Math.floor(timeFrame / 10 % 10);
+        newMark.timeFrameOnes = Math.floor(timeFrame % 10);
+
         $scope.marks.push(newMark);
+    };
+
+    $scope.deleteMark = function (mark) {
+        var index = $scope.marks.indexOf(mark);
+        $scope.marks.splice(index, 1);
+    };
+
+    $scope.jumpToMark = function (mark) {
+        $scope.currentTime = mark.time;
+        document.getElementsByTagName("video")[0].currentTime = $scope.currentTime;
     };
 
     $scope.setSourceSpeed = function () {
