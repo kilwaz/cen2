@@ -4,6 +4,7 @@ drop table if exists source;
 drop table if exists person;
 drop table if exists picture;
 drop table if exists clip;
+drop table if exists mark;
 drop table if exists process;
 
 drop table if exists flyway_testing_migrate;
@@ -53,4 +54,10 @@ create table clip(
     start_time double,
     end_time double,
     file_name varchar(1000),
+    PRIMARY KEY (uuid));
+
+create table mark(
+    uuid char(36) NOT NULL,
+    source char(36),
+    time double,
     PRIMARY KEY (uuid));

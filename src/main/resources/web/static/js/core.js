@@ -40,6 +40,7 @@ sourceVideoApp.controller('sourceVideoCtrl', function ($scope, $http, $filter) {
     $scope.timeFrameTens = 0;
     $scope.timeFrameOnes = 0;
     $scope.playBackSpeed = 1;
+    $scope.selectedSource = undefined;
 
     $scope.marks = [];
 
@@ -49,10 +50,10 @@ sourceVideoApp.controller('sourceVideoCtrl', function ($scope, $http, $filter) {
         document.getElementsByTagName("video")[0].currentTime = $scope.convertToSeconds();
     };
 
-    $scope.sourceInfo = function (sourceRef) {
+    $scope.sourceInfo = function (sourceUuid) {
         var requestData = $.param({
             json: JSON.stringify({
-                ref: sourceRef
+                uuid: sourceUuid
             })
         });
 
@@ -65,9 +66,36 @@ sourceVideoApp.controller('sourceVideoCtrl', function ($scope, $http, $filter) {
         $http.post("sourceInfoJSON", requestData, config)
             .then(
                 function (response) {
-                    var selectedSource = $filter('filter')($scope.sources, {'uuid': sourceRef});
+                    var selectedSource = $filter('filter')($scope.sources, {'uuid': sourceUuid});
                     if (selectedSource.length === 1) {
                         selectedSource[0].sourceInfo = response.data;
+                    }
+                },
+                function (response) {
+                    // failure callback
+                }
+            );
+    };
+
+    $scope.sourceMark = function (sourceUuid) {
+        var requestData = $.param({
+            json: JSON.stringify({
+                uuid: sourceUuid
+            })
+        });
+
+        var config = {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
+            }
+        };
+
+        $http.post("marksJSON", requestData, config)
+            .then(
+                function (response) {
+                    var selectedSource = $filter('filter')($scope.sources, {'uuid': sourceUuid});
+                    if (selectedSource.length === 1) {
+                        selectedSource[0].marks = response.data;
                     }
                 },
                 function (response) {
@@ -79,7 +107,7 @@ sourceVideoApp.controller('sourceVideoCtrl', function ($scope, $http, $filter) {
     $scope.splitSource = function () {
         var requestData = $.param({
             json: JSON.stringify({
-                uuid: $scope.selectedVideoRef,
+                uuid: $scope.selectedSource.uuid,
                 startTime: 0.0,
                 endTime: 10.0
             })
@@ -115,37 +143,78 @@ sourceVideoApp.controller('sourceVideoCtrl', function ($scope, $http, $filter) {
     $scope.createMark = function () {
         var newMark = {
             time: 0,
-            timeHourTens: 0,
-            timeHourOnes: 0,
-            timeMinTens: 0,
-            timeMinOnes: 0,
-            timeSecTens: 0,
-            timeSecOnes: 0,
-            timeFrameTens: 0,
-            timeFrameOnes: 0
+            uuid: ""
         };
 
         newMark.time = $scope.convertToSeconds();
+        $scope.selectedSource.marks.push(newMark);
 
-        var timeHour = Math.floor(newMark.time / 3600);
-        newMark.timeHourTens = Math.floor(timeHour / 10 % 10);
-        newMark.timeHourOnes = Math.floor(timeHour % 10);
-        var timeMin = Math.floor((newMark.time / 60) % 60);
-        newMark.timeMinTens = Math.floor(timeMin / 10 % 10);
-        newMark.timeMinOnes = Math.floor(timeMin % 10);
-        var timeSec = Math.floor(newMark.time % 60);
-        newMark.timeSecTens = Math.floor(timeSec / 10 % 10);
-        newMark.timeSecOnes = Math.floor(timeSec % 10);
-        var timeFrame = Math.floor((newMark.time % 1) * frameRate);
-        newMark.timeFrameTens = Math.floor(timeFrame / 10 % 10);
-        newMark.timeFrameOnes = Math.floor(timeFrame % 10);
+        var requestData = $.param({
+            json: JSON.stringify({
+                uuid: $scope.selectedSource.uuid,
+                time: newMark.time
+            })
+        });
 
-        $scope.marks.push(newMark);
+        var config = {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
+            }
+        };
+
+        $http.post("createMark", requestData, config)
+            .then(
+                function (response) {
+
+                },
+                function (response) {
+                    // failure callback
+                }
+            );
+    };
+
+    $scope.timeString = function (time) {
+        var timeHour = Math.floor(time / 3600);
+        var timeHourTens = Math.floor(timeHour / 10 % 10);
+        var timeHourOnes = Math.floor(timeHour % 10);
+        var timeMin = Math.floor((time / 60) % 60);
+        var timeMinTens = Math.floor(timeMin / 10 % 10);
+        var timeMinOnes = Math.floor(timeMin % 10);
+        var timeSec = Math.floor(time % 60);
+        var timeSecTens = Math.floor(timeSec / 10 % 10);
+        var timeSecOnes = Math.floor(timeSec % 10);
+        var timeFrame = Math.floor((time % 1) * frameRate);
+        var timeFrameTens = Math.floor(timeFrame / 10 % 10);
+        var timeFrameOnes = Math.floor(timeFrame % 10);
+
+        return timeHourTens + timeHourOnes + "h" + timeMinTens + timeMinOnes + "m" + timeSecTens + timeSecOnes + "s" + timeFrameTens + timeFrameOnes + "f";
     };
 
     $scope.deleteMark = function (mark) {
-        var index = $scope.marks.indexOf(mark);
-        $scope.marks.splice(index, 1);
+        var index = $scope.selectedSource.marks.indexOf(mark);
+        $scope.selectedSource.marks.splice(index, 1);
+
+        var requestData = $.param({
+            json: JSON.stringify({
+                uuid: mark.uuid
+            })
+        });
+
+        var config = {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
+            }
+        };
+
+        $http.post("removeMark", requestData, config)
+            .then(
+                function (response) {
+
+                },
+                function (response) {
+                    // failure callback
+                }
+            );
     };
 
     $scope.jumpToMark = function (mark) {
@@ -158,19 +227,20 @@ sourceVideoApp.controller('sourceVideoCtrl', function ($scope, $http, $filter) {
     };
 });
 
-sourceVideoApp.directive('sourceChange', function () {
+sourceVideoApp.directive('sourceChange', function ($filter) {
     return {
         link: function link($scope, element) {
             element.bind('change', function () {
                 var selectedSource = element[0].selectedOptions[0].dataset;
-                $scope.selectedVideoRef = selectedSource.ref;
-                $scope.sourceInfo(selectedSource.ref);
+                $scope.selectedSource = $filter('filter')($scope.sources, {'uuid': selectedSource.uuid})[0];
+                $scope.sourceInfo($scope.selectedSource.uuid);
+                $scope.sourceMark($scope.selectedSource.uuid);
             });
         }
     }
 });
 
-sourceVideoApp.directive('sourceVideo', function ($window, $timeout) {
+sourceVideoApp.directive('sourceVideo', function () {
     return {
         scope: {
             videoCurrentTime: "=videoCurrentTime",

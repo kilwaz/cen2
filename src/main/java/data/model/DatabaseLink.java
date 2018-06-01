@@ -1,13 +1,8 @@
 package data.model;
 
-import data.model.links.ClipDatabaseLink;
-import data.model.links.EncodedProgressDatabaseLink;
-import data.model.links.ProcessDatabaseLink;
-import data.model.links.SourceDatabaseLink;
-import data.model.objects.Clip;
-import data.model.objects.EncodedProgress;
+import data.model.links.*;
+import data.model.objects.*;
 import data.model.objects.Process;
-import data.model.objects.Source;
 import error.Error;
 
 import java.lang.reflect.Method;
@@ -24,6 +19,7 @@ public class DatabaseLink {
         linkClasses.put(Process.class, ProcessDatabaseLink.class);
         linkClasses.put(EncodedProgress.class, EncodedProgressDatabaseLink.class);
         linkClasses.put(Clip.class, ClipDatabaseLink.class);
+        linkClasses.put(Mark.class, MarkDatabaseLink.class);
     }
 
     private String tableName = "";

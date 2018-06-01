@@ -1,14 +1,13 @@
 package core.builders.requests;
 
 import org.apache.log4j.Logger;
-import requests.actions.EncodeSource;
-import requests.actions.ResetDatabase;
-import requests.actions.SplitSource;
+import requests.actions.*;
 import requests.annotations.Action;
 import requests.annotations.JSON;
 import requests.annotations.JSP;
 import requests.annotations.RequestName;
 import requests.json.EncodedProgressJSON;
+import requests.json.MarksJSON;
 import requests.json.SourceInfoJSON;
 import requests.json.SourcesJSON;
 import requests.pages.DatabaseAdmin;
@@ -35,6 +34,9 @@ public class RequestMapper {
         build(SourceInfoJSON.class);
         build(EncodedProgressJSON.class);
         build(SplitSource.class);
+        build(MarksJSON.class);
+        build(CreateMark.class);
+        build(RemoveMark.class);
     }
 
     private static void build(Class requestClass) {

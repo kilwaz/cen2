@@ -52,7 +52,7 @@
                 <label for="sourceSelect">Source: </label>
                 <select name="sourceSelect" id="sourceSelect" ng-model="currentVideo" source-change>
                     <option value="" selected="selected"></option>
-                    <option ng-repeat="source in sources" data-ref="{{source.uuid}}" value="{{source.url}}">
+                    <option ng-repeat="source in sources" data-uuid="{{source.uuid}}" value="{{source.url}}">
                         {{source.name}}
                     </option>
                 </select>
@@ -66,13 +66,14 @@
                         <th>Aspect Ratio</th>
                         <th>FPS</th>
                     </tr>
-                    <tr ng-repeat="source in sources | filter : (!!selectedVideoRef || undefined) && {'uuid':selectedVideoRef}">
-                        <td>{{source.sourceInfo.format.duration | number : 2}}</td>
-                        <td>{{source.sourceInfo.format.format_long_name}}</td>
-                        <td>{{source.sourceInfo.format.bit_rate}}</td>
-                        <td>{{source.sourceInfo.streams[0].width}} x {{source.sourceInfo.streams[0].height}}</td>
-                        <td>{{source.sourceInfo.streams[0].display_aspect_ratio}}</td>
-                        <td>{{source.sourceInfo.streams[0].avg_frame_rate}}</td>
+                    <tr>
+                        <td>{{selectedSource.sourceInfo.format.duration | number : 2}}</td>
+                        <td>{{selectedSource.sourceInfo.format.format_long_name}}</td>
+                        <td>{{selectedSource.sourceInfo.format.bit_rate}}</td>
+                        <td>{{selectedSource.sourceInfo.streams[0].width}} x {{source.sourceInfo.streams[0].height}}
+                        </td>
+                        <td>{{selectedSource.sourceInfo.streams[0].display_aspect_ratio}}</td>
+                        <td>{{selectedSource.sourceInfo.streams[0].avg_frame_rate}}</td>
                     </tr>
                 </table>
 
@@ -107,11 +108,9 @@
                 <input type="button" value="Split" ng-click="splitSource()"/>
 
                 <p>Marks:</p>
-                <div ng-repeat="mark in marks" class="card">
+                <div ng-repeat="mark in selectedSource.marks" class="card">
                     <div class="card-body">
-                        {{ mark.timeHourTens + '' + mark.timeHourOnes + 'h ' + mark.timeMinTens + '' +
-                        mark.timeMinOnes + 'm ' + mark.timeSecTens + '' + mark.timeSecOnes + 's ' +
-                        mark.timeFrameTens + '' + mark.timeFrameOnes + 'f'}}
+                        {{ timeString(mark.time) }}
                         <input type="button" value="Delete" ng-click="deleteMark(mark)"/>
                         <input type="button" value="Show" ng-click="jumpToMark(mark)"/>
                     </div>
