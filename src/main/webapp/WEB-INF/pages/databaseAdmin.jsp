@@ -99,6 +99,7 @@
 
                 <input type="button" value="Set" ng-click="setSourceTime()"/>
                 <input type="button" value="Mark" ng-click="createMark()"/>
+                <input type="button" value="Clip" ng-click="createClip()"/>
 
                 <br/>
                 <input type="number" min="0" max="10" ng-change="setSourceSpeed()" ng-model="playBackSpeed"/>
@@ -107,16 +108,33 @@
 
                 <input type="button" value="Split" ng-click="splitSource()"/>
 
-                <p>Marks:</p>
-                <div ng-repeat="mark in selectedSource.marks" class="card">
-                    <div class="card-body">
-                        {{ timeString(mark.time) }}
-                        <input type="button" value="Delete" ng-click="deleteMark(mark)"/>
-                        <input type="button" value="Show" ng-click="jumpToMark(mark)"/>
+                <div class="container no-gutters">
+                    <div class="row no-gutters">
+                        <div class="col">
+                            <p>Marks:</p>
+                            <div ng-repeat="mark in selectedSource.marks" class="card">
+                                <div class="card-body">
+                                    {{ toTimeString(mark.time) }}
+                                    <input type="button" value="Show" ng-click="jumpToMark(mark)"/>
+                                    <input type="button" value="Delete" ng-click="deleteMark(mark)"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <p>Clips:</p>
+                            <div ng-repeat="clip in selectedSource.clips" class="card">
+                                <div class="card-body">
+                                    {{ clip.uuid }}
+                                    <input type="button" value="Compile" ng-click=""/>
+                                    <input type="button" value="Delete" ng-click="deleteClip(clip)"/>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
 <jsp:include page="../includes/footer.jsp"/>

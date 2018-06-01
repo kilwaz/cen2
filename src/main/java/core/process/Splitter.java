@@ -50,8 +50,6 @@ public class Splitter implements Flow.Subscriber<LogMessage> {
     public void execute() {
         Clip clip = Clip.create(Clip.class);
         clip.setSource(source);
-        clip.setStartTime(startTime);
-        clip.setEndTime(endTime);
         clip.setFileName("/home/kilwaz/srcDone/clip-" + clip.getUuidString() + "." + source.getFileExtension());
         clip.save();
 

@@ -42,8 +42,6 @@ sourceVideoApp.controller('sourceVideoCtrl', function ($scope, $http, $filter) {
     $scope.playBackSpeed = 1;
     $scope.selectedSource = undefined;
 
-    $scope.marks = [];
-
     getSources($scope);
 
     $scope.setSourceTime = function () {
@@ -96,6 +94,33 @@ sourceVideoApp.controller('sourceVideoCtrl', function ($scope, $http, $filter) {
                     var selectedSource = $filter('filter')($scope.sources, {'uuid': sourceUuid});
                     if (selectedSource.length === 1) {
                         selectedSource[0].marks = response.data;
+                    }
+                },
+                function (response) {
+                    // failure callback
+                }
+            );
+    };
+
+    $scope.sourceClip = function (sourceUuid) {
+        var requestData = $.param({
+            json: JSON.stringify({
+                uuid: sourceUuid
+            })
+        });
+
+        var config = {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
+            }
+        };
+
+        $http.post("clipsJSON", requestData, config)
+            .then(
+                function (response) {
+                    var selectedSource = $filter('filter')($scope.sources, {'uuid': sourceUuid});
+                    if (selectedSource.length === 1) {
+                        selectedSource[0].clips = response.data;
                     }
                 },
                 function (response) {
@@ -173,7 +198,64 @@ sourceVideoApp.controller('sourceVideoCtrl', function ($scope, $http, $filter) {
             );
     };
 
-    $scope.timeString = function (time) {
+    $scope.createClip = function () {
+        var newClip = {
+            uuid: ""
+        };
+
+        $scope.selectedSource.clips.push(newClip);
+
+        var requestData = $.param({
+            json: JSON.stringify({
+                uuid: $scope.selectedSource.uuid
+            })
+        });
+
+        var config = {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
+            }
+        };
+
+        $http.post("createClip", requestData, config)
+            .then(
+                function (response) {
+
+                },
+                function (response) {
+                    // failure callback
+                }
+            );
+    };
+
+    $scope.deleteClip = function (clip) {
+        var index = $scope.selectedSource.clips.indexOf(clip);
+        $scope.selectedSource.clips.splice(index, 1);
+
+        var requestData = $.param({
+            json: JSON.stringify({
+                uuid: clip.uuid
+            })
+        });
+
+        var config = {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
+            }
+        };
+
+        $http.post("removeClip", requestData, config)
+            .then(
+                function (response) {
+
+                },
+                function (response) {
+                    // failure callback
+                }
+            );
+    };
+
+    $scope.toTimeString = function (time) {
         var timeHour = Math.floor(time / 3600);
         var timeHourTens = Math.floor(timeHour / 10 % 10);
         var timeHourOnes = Math.floor(timeHour % 10);
@@ -235,6 +317,7 @@ sourceVideoApp.directive('sourceChange', function ($filter) {
                 $scope.selectedSource = $filter('filter')($scope.sources, {'uuid': selectedSource.uuid})[0];
                 $scope.sourceInfo($scope.selectedSource.uuid);
                 $scope.sourceMark($scope.selectedSource.uuid);
+                $scope.sourceClip($scope.selectedSource.uuid);
             });
         }
     }

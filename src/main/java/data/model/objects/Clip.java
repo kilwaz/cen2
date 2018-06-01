@@ -8,20 +8,20 @@ import java.util.UUID;
 public class Clip extends DatabaseObject {
     private static Logger log = Logger.getLogger(Clip.class);
 
-    private Source source;
-    private Double startTime = 0d;
-    private Double endTime = 0d;
+    private Source source = null;
+    private Mark startMark = null;
+    private Mark endMark = null;
     private String fileName = "";
 
     public Clip() {
         super();
     }
 
-    public Clip(UUID uuid, Source source, Double startTime, Double endTime, String fileName) {
+    public Clip(UUID uuid, Source source, Mark startMark, Mark endMark, String fileName) {
         super(uuid);
         this.source = source;
-        this.startTime = startTime;
-        this.endTime = endTime;
+        this.startMark = startMark;
+        this.endMark = endMark;
         this.fileName = fileName;
     }
 
@@ -33,24 +33,44 @@ public class Clip extends DatabaseObject {
         this.source = source;
     }
 
-    public Double getStartTime() {
-        return startTime;
+    public Mark getStartMark() {
+        return startMark;
     }
 
-    public void setStartTime(Double startTime) {
-        this.startTime = startTime;
+    public void setStartMark(Mark startMark) {
+        this.startMark = startMark;
     }
 
-    public Double getEndTime() {
-        return endTime;
+    public Mark getEndMark() {
+        return endMark;
     }
 
-    public void setEndTime(Double endTime) {
-        this.endTime = endTime;
+    public void setEndMark(Mark endMark) {
+        this.endMark = endMark;
+    }
+
+    public String getStartMarkUUID() {
+        if (startMark == null) {
+            return null;
+        } else {
+            return startMark.getUuidString();
+        }
+    }
+
+    public String getEndMarkUUID() {
+        if (endMark == null) {
+            return null;
+        } else {
+            return endMark.getUuidString();
+        }
     }
 
     public String getSourceUUID() {
-        return source.getUuidString();
+        if (source == null) {
+            return null;
+        } else {
+            return source.getUuidString();
+        }
     }
 
     public String getFileName() {

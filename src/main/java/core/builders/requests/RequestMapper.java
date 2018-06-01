@@ -6,10 +6,7 @@ import requests.annotations.Action;
 import requests.annotations.JSON;
 import requests.annotations.JSP;
 import requests.annotations.RequestName;
-import requests.json.EncodedProgressJSON;
-import requests.json.MarksJSON;
-import requests.json.SourceInfoJSON;
-import requests.json.SourcesJSON;
+import requests.json.*;
 import requests.pages.DatabaseAdmin;
 import requests.pages.Hello;
 import requests.pages.Import;
@@ -37,6 +34,9 @@ public class RequestMapper {
         build(MarksJSON.class);
         build(CreateMark.class);
         build(RemoveMark.class);
+        build(RemoveClip.class);
+        build(CreateClip.class);
+        build(ClipsJSON.class);
     }
 
     private static void build(Class requestClass) {

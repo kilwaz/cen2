@@ -40,6 +40,10 @@ public class Mark extends DatabaseObject {
     }
 
     public String getSourceUUID() {
-        return source.getUuidString();
+        if (source == null) {
+            return null;
+        } else {
+            return source.getUuidString();
+        }
     }
 }

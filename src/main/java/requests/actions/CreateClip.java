@@ -1,7 +1,8 @@
 package requests.actions;
 
 import core.Request;
-import data.model.objects.Mark;
+import data.model.objects.Clip;
+import data.model.objects.Source;
 import data.model.objects.json.JSONContainer;
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
@@ -12,12 +13,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
-@RequestName("removeMark")
+@RequestName("createClip")
 @Action
-public class RemoveMark extends Request {
-    private static Logger log = Logger.getLogger(RemoveMark.class);
+public class CreateClip extends Request {
+    private static Logger log = Logger.getLogger(CreateClip.class);
 
-    public RemoveMark() {
+    public CreateClip() {
         super();
     }
 
@@ -29,10 +30,11 @@ public class RemoveMark extends Request {
         if (jsonObject.has("uuid")) {
             String uuid = jsonObject.getString("uuid");
             if (!uuid.isEmpty()) {
-                Mark mark = Mark.load(UUID.fromString(uuid), Mark.class);
-                if (mark != null) {
-                    mark.delete();
-                }
+                Source source = Source.load(UUID.fromString(uuid), Source.class);
+
+                Clip clip = Clip.create(Clip.class);
+                clip.setSource(source);
+                clip.save();
             }
         }
     }

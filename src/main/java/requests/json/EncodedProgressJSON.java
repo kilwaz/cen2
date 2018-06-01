@@ -11,6 +11,7 @@ import requests.annotations.RequestName;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.UUID;
 
 @RequestName("encodedProgressJSON")
 @JSON
@@ -24,13 +25,13 @@ public class EncodedProgressJSON extends Request {
         JSONObject jsonObject = incomingRequestData.toJSONObject();
 
         if (jsonObject.has("uuid")) {
-            SourceDAO sourceDAO = new SourceDAO();
-            Source source = sourceDAO.getSourceByUUID(jsonObject.getString("uuid"));
+            String uuid = jsonObject.getString("uuid");
+            if (!uuid.isEmpty()) {
+                Source source = Source.load(UUID.fromString(uuid), Source.class);
 
-            JSONContainer jsonContainer = new JSONContainer(source.getEncodedProgress().asJSON());
-            jsonContainer.writeToResponse(response);
-        } else {
-            log.info("source ref not provided");
+                JSONContainer jsonContainer = new JSONContainer(source.getEncodedProgress().asJSON());
+                jsonContainer.writeToResponse(response);
+            }
         }
     }
 }
