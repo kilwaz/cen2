@@ -1,18 +1,16 @@
 package core.builders.requests;
 
+import core.Request;
 import org.apache.log4j.Logger;
-import requests.actions.*;
+import org.reflections.Reflections;
+import org.reflections.scanners.SubTypesScanner;
 import requests.annotations.Action;
 import requests.annotations.JSON;
 import requests.annotations.JSP;
 import requests.annotations.RequestName;
-import requests.json.*;
-import requests.pages.DatabaseAdmin;
-import requests.pages.Hello;
-import requests.pages.Import;
-import requests.pages.Processes;
 
 import java.util.HashMap;
+import java.util.Set;
 
 public class RequestMapper {
     private static Logger log = Logger.getLogger(RequestMapper.class);
@@ -20,23 +18,13 @@ public class RequestMapper {
     private static HashMap<String, RequestMapping> mapping = new HashMap<>();
 
     public static void buildMappings() {
-        //TODO Reflect files to get this list, should be possible!  Search request and json packages
-        build(Hello.class);
-        build(DatabaseAdmin.class);
-        build(SourcesJSON.class);
-        build(ResetDatabase.class);
-        build(Import.class);
-        build(EncodeSource.class);
-        build(Processes.class);
-        build(SourceInfoJSON.class);
-        build(EncodedProgressJSON.class);
-        build(SplitSource.class);
-        build(MarksJSON.class);
-        build(CreateMark.class);
-        build(RemoveMark.class);
-        build(RemoveClip.class);
-        build(CreateClip.class);
-        build(ClipsJSON.class);
+        Set<Class<? extends Request>> actions = new Reflections("requests.actions", new SubTypesScanner(false)).getSubTypesOf(Request.class);
+        Set<Class<? extends Request>> pages = new Reflections("requests.pages", new SubTypesScanner(false)).getSubTypesOf(Request.class);
+        Set<Class<? extends Request>> json = new Reflections("requests.json", new SubTypesScanner(false)).getSubTypesOf(Request.class);
+
+        actions.forEach(RequestMapper::build);
+        pages.forEach(RequestMapper::build);
+        json.forEach(RequestMapper::build);
     }
 
     private static void build(Class requestClass) {
