@@ -35,6 +35,10 @@ public class CreateClip extends Request {
                 Clip clip = Clip.create(Clip.class);
                 clip.setSource(source);
                 clip.save();
+
+                JSONContainer outgoingJsonContainer = new JSONContainer();
+                outgoingJsonContainer.dbDataItem(clip);
+                outgoingJsonContainer.writeToResponse(response);
             }
         }
     }

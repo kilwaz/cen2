@@ -31,7 +31,7 @@ public class MarksJSON extends Request {
 
                 MarkDAO markDAO = new MarkDAO();
                 JSONContainer jsonContainer = new JSONContainer();
-                jsonContainer.dbData(markDAO.getMarksFromSource(source));
+                jsonContainer.dbDataList(markDAO.getMarksFromSource(source));
                 jsonContainer.writeToResponse(response);
             }
         }

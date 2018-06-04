@@ -37,6 +37,10 @@ public class CreateMark extends Request {
             mark.setSource(source);
             mark.setTime(time);
             mark.save();
+
+            JSONContainer outgoingJsonContainer = new JSONContainer();
+            outgoingJsonContainer.dbDataItem(mark);
+            outgoingJsonContainer.writeToResponse(response);
         }
     }
 }

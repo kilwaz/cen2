@@ -190,7 +190,10 @@ sourceVideoApp.controller('sourceVideoCtrl', function ($scope, $http, $filter) {
         $http.post("createMark", requestData, config)
             .then(
                 function (response) {
-
+                    var responseData = response.data;
+                    if (responseData.length === 1) {
+                        newMark.uuid = responseData[0].uuid;
+                    }
                 },
                 function (response) {
                     // failure callback
@@ -220,7 +223,10 @@ sourceVideoApp.controller('sourceVideoCtrl', function ($scope, $http, $filter) {
         $http.post("createClip", requestData, config)
             .then(
                 function (response) {
-
+                    var responseData = response.data;
+                    if (responseData.length === 1) {
+                        newClip.uuid = responseData[0].uuid;
+                    }
                 },
                 function (response) {
                     // failure callback

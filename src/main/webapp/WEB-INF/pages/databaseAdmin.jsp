@@ -124,7 +124,6 @@
                             <p>Clips:</p>
                             <div ng-repeat="clip in selectedSource.clips" class="card">
                                 <div class="card-body">
-                                    {{ clip.uuid }}
                                     <input type="button" value="Compile" ng-click=""/>
                                     <input type="button" value="Delete" ng-click="deleteClip(clip)"/>
                                 </div>

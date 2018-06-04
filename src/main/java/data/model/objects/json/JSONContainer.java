@@ -30,8 +30,15 @@ public class JSONContainer<DatabaseObject> {
         this.rawData = jsonObject.toString();
     }
 
-    public JSONContainer dbData(List<DatabaseObject> data) {
-        this.data = data;
+    public JSONContainer dbDataList(List<DatabaseObject> dataList) {
+        this.data = dataList;
+        this.rawData = null;
+        return this;
+    }
+
+    public JSONContainer dbDataItem(DatabaseObject dataItem) {
+        this.data = new ArrayList<>();
+        this.data.add(dataItem);
         this.rawData = null;
         return this;
     }

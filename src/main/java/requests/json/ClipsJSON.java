@@ -31,7 +31,7 @@ public class ClipsJSON extends Request {
 
                 ClipDAO clipDAO = new ClipDAO();
                 JSONContainer jsonContainer = new JSONContainer();
-                jsonContainer.dbData(clipDAO.getClipsFromSource(source));
+                jsonContainer.dbDataList(clipDAO.getClipsFromSource(source));
                 jsonContainer.writeToResponse(response);
             }
         }
