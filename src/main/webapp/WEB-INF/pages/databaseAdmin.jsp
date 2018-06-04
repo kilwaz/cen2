@@ -98,20 +98,15 @@
                 <input type="number" min="0" max="9" ng-model="timeFrameOnes"/>
 
                 <input type="button" value="Set" ng-click="setSourceTime()"/>
-                <input type="button" value="Mark" ng-click="createMark()"/>
-                <input type="button" value="Clip" ng-click="createClip()"/>
 
-                <br/>
                 <input type="number" min="0" max="10" ng-change="setSourceSpeed()" ng-model="playBackSpeed"/>
-
-                <br/>
 
                 <input type="button" value="Split" ng-click="splitSource()"/>
 
                 <div class="container no-gutters">
                     <div class="row no-gutters">
                         <div class="col">
-                            <p>Marks:</p>
+                            Marks: <input type="button" value="Mark" ng-click="createMark()"/>
                             <div ng-repeat="mark in selectedSource.marks" class="card">
                                 <div class="card-body">
                                     {{ toTimeString(mark.time) }}
@@ -121,9 +116,11 @@
                             </div>
                         </div>
                         <div class="col">
-                            <p>Clips:</p>
+                            Clips: <input type="button" value="Clip" ng-click="createClip()"/>
                             <div ng-repeat="clip in selectedSource.clips" class="card">
                                 <div class="card-body">
+                                    <span>Start Mark</span>
+                                    <span>End Mark</span>
                                     <input type="button" value="Compile" ng-click=""/>
                                     <input type="button" value="Delete" ng-click="deleteClip(clip)"/>
                                 </div>
