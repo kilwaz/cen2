@@ -75,6 +75,56 @@ sourceVideoApp.controller('sourceVideoCtrl', function ($scope, $http, $filter) {
             );
     };
 
+    $scope.setClipStart = function (clip) {
+        var requestData = $.param({
+            json: JSON.stringify({
+                clipUuid: clip.uuid,
+                startMarkUuid: clip.startMark.uuid
+            })
+        });
+
+        var config = {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
+            }
+        };
+
+        $http.post("updateClip", requestData, config)
+            .then(
+                function (response) {
+
+                },
+                function (response) {
+                    // failure callback
+                }
+            );
+    };
+
+    $scope.setClipEnd = function (clip) {
+        var requestData = $.param({
+            json: JSON.stringify({
+                clipUuid: clip.uuid,
+                endMarkUuid: clip.endMark.uuid
+            })
+        });
+
+        var config = {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
+            }
+        };
+
+        $http.post("updateClip", requestData, config)
+            .then(
+                function (response) {
+
+                },
+                function (response) {
+                    // failure callback
+                }
+            );
+    };
+
     $scope.sourceMark = function (sourceUuid) {
         var requestData = $.param({
             json: JSON.stringify({
@@ -121,6 +171,21 @@ sourceVideoApp.controller('sourceVideoCtrl', function ($scope, $http, $filter) {
                     var selectedSource = $filter('filter')($scope.sources, {'uuid': sourceUuid});
                     if (selectedSource.length === 1) {
                         selectedSource[0].clips = response.data;
+
+                        angular.forEach(selectedSource[0].clips, function (clip) {
+                            var startMarkUuid = clip.startMark.uuid;
+                            var endMarkUuid = clip.endMark.uuid;
+
+                            var startMark = $filter('filter')(selectedSource[0].marks, {'uuid': startMarkUuid});
+                            if (startMark !== undefined && startMark.length === 1) {
+                                clip.startMark = startMark[0];
+                            }
+
+                            var endMark = $filter('filter')(selectedSource[0].marks, {'uuid': endMarkUuid});
+                            if (endMark !== undefined && endMark.length === 1) {
+                                clip.endMark = endMark[0];
+                            }
+                        });
                     }
                 },
                 function (response) {

@@ -1,6 +1,7 @@
 package data.model.objects;
 
 import data.model.DatabaseObject;
+import data.model.objects.json.JSONMappable;
 import org.apache.log4j.Logger;
 
 import java.util.UUID;
@@ -33,6 +34,7 @@ public class Clip extends DatabaseObject {
         this.source = source;
     }
 
+    @JSONMappable("startMark")
     public Mark getStartMark() {
         return startMark;
     }
@@ -41,6 +43,7 @@ public class Clip extends DatabaseObject {
         this.startMark = startMark;
     }
 
+    @JSONMappable("endMark")
     public Mark getEndMark() {
         return endMark;
     }

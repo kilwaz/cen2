@@ -119,9 +119,21 @@
                             Clips: <input type="button" value="Clip" ng-click="createClip()"/>
                             <div ng-repeat="clip in selectedSource.clips" class="card">
                                 <div class="card-body">
-                                    <span>Start Mark</span>
-                                    <span>End Mark</span>
-                                    <input type="button" value="Compile" ng-click=""/>
+                                    <select ng-model="clip.startMark"
+                                            ng-change="setClipStart(clip)">
+                                        <option ng-repeat="mark in selectedSource.marks"
+                                                ng-value="mark">
+                                            {{ toTimeString(mark.time) }}
+                                        </option>
+                                    </select>
+                                    <select ng-model="clip.endMark"
+                                            ng-change="setClipEnd(clip)">
+                                        <option ng-repeat="mark in selectedSource.marks"
+                                                ng-value="mark">
+                                            {{ toTimeString(mark.time) }}
+                                        </option>
+                                    </select>
+                                    <input type="button" value="Lock In" ng-click=""/>
                                     <input type="button" value="Delete" ng-click="deleteClip(clip)"/>
                                 </div>
                             </div>
