@@ -54,6 +54,7 @@ create table clip(
     start_mark char(36),
     end_mark char(36),
     file_name varchar(1000),
+    locked_in bool,
     PRIMARY KEY (uuid));
 
 create table mark(

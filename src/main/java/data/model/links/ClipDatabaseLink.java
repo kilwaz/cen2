@@ -18,5 +18,6 @@ public class ClipDatabaseLink extends DatabaseLink {
         link("start_mark", method("getStartMarkUUID"), method("setStartMark", Mark.class)); // 3
         link("end_mark", method("getEndMarkUUID"), method("setEndMark", Mark.class)); // 4
         link("file_name", method("getFileName"), method("setFileName", String.class)); // 5
+        link("locked_in", method("getLockedIn"), method("setLockedIn", Boolean.class)); // 6
     }
 }

@@ -1,35 +1,46 @@
-var sourceVideoApp = angular.module('sourceVideoApp', []);
-var resetDatabaseApp = angular.module('resetDatabaseApp', []);
+var ServerRequestService = angular.module('ServerRequestService', [])
+    .service('ServerRequest', function ($http) {
+        this.serverRequest = function (json, url, success, failure) {
+            var requestData = $.param({
+                json: json
+            });
+
+            var config = {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
+                }
+            };
+
+            if (success === undefined) {
+                success = function (response) {
+                };
+            }
+
+            if (failure === undefined) {
+                failure = function (response) {
+                };
+            }
+
+            $http.post(url, requestData, config)
+                .then(
+                    success,
+                    failure
+                );
+        };
+    });
+
+var sourceVideoApp = angular.module('sourceVideoApp', ['ServerRequestService']);
+var resetDatabaseApp = angular.module('resetDatabaseApp', ['ServerRequestService']);
 
 var frameRate = 23.98;
 
-resetDatabaseApp.controller('resetDatabaseCtrl', function ($scope, $http) {
+resetDatabaseApp.controller('resetDatabaseCtrl', function ($scope, $http, ServerRequest) {
     $scope.sendPost = function () {
-        var requestData = $.param({
-            json: JSON.stringify({
-                name: "post data"
-            })
-        });
-
-        var config = {
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
-            }
-        };
-
-        $http.post("rdb", requestData, config)
-            .then(
-                function (response) {
-                    // success callback
-                },
-                function (response) {
-                    // failure callback
-                }
-            );
+        ServerRequest.serverRequest("", "rdb");
     }
 });
 
-sourceVideoApp.controller('sourceVideoCtrl', function ($scope, $http, $filter) {
+sourceVideoApp.controller('sourceVideoCtrl', function ($scope, $http, $filter, ServerRequest) {
     $scope.currentTime = 0;
     $scope.timeHourTens = 0;
     $scope.timeHourOnes = 0;
@@ -49,175 +60,88 @@ sourceVideoApp.controller('sourceVideoCtrl', function ($scope, $http, $filter) {
     };
 
     $scope.sourceInfo = function (sourceUuid) {
-        var requestData = $.param({
-            json: JSON.stringify({
+        ServerRequest.serverRequest(
+            JSON.stringify({
                 uuid: sourceUuid
-            })
-        });
-
-        var config = {
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
-            }
-        };
-
-        $http.post("sourceInfoJSON", requestData, config)
-            .then(
-                function (response) {
-                    var selectedSource = $filter('filter')($scope.sources, {'uuid': sourceUuid});
-                    if (selectedSource.length === 1) {
-                        selectedSource[0].sourceInfo = response.data;
-                    }
-                },
-                function (response) {
-                    // failure callback
+            }),
+            "sourceInfoJSON",
+            function (response) {
+                var selectedSource = $filter('filter')($scope.sources, {'uuid': sourceUuid});
+                if (selectedSource.length === 1) {
+                    selectedSource[0].sourceInfo = response.data;
                 }
-            );
+            });
     };
 
     $scope.setClipStart = function (clip) {
-        var requestData = $.param({
-            json: JSON.stringify({
+        ServerRequest.serverRequest(
+            JSON.stringify({
                 clipUuid: clip.uuid,
                 startMarkUuid: clip.startMark.uuid
-            })
-        });
-
-        var config = {
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
-            }
-        };
-
-        $http.post("updateClip", requestData, config)
-            .then(
-                function (response) {
-
-                },
-                function (response) {
-                    // failure callback
-                }
-            );
+            }),
+            "updateClip");
     };
 
     $scope.setClipEnd = function (clip) {
-        var requestData = $.param({
-            json: JSON.stringify({
+        ServerRequest.serverRequest(
+            JSON.stringify({
                 clipUuid: clip.uuid,
                 endMarkUuid: clip.endMark.uuid
-            })
-        });
-
-        var config = {
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
-            }
-        };
-
-        $http.post("updateClip", requestData, config)
-            .then(
-                function (response) {
-
-                },
-                function (response) {
-                    // failure callback
-                }
-            );
+            }),
+            "updateClip");
     };
 
     $scope.sourceMark = function (sourceUuid) {
-        var requestData = $.param({
-            json: JSON.stringify({
+        ServerRequest.serverRequest(
+            JSON.stringify({
                 uuid: sourceUuid
-            })
-        });
-
-        var config = {
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
-            }
-        };
-
-        $http.post("marksJSON", requestData, config)
-            .then(
-                function (response) {
-                    var selectedSource = $filter('filter')($scope.sources, {'uuid': sourceUuid});
-                    if (selectedSource.length === 1) {
-                        selectedSource[0].marks = response.data;
-                    }
-                },
-                function (response) {
-                    // failure callback
+            }),
+            "marksJSON",
+            function (response) {
+                var selectedSource = $filter('filter')($scope.sources, {'uuid': sourceUuid});
+                if (selectedSource.length === 1) {
+                    selectedSource[0].marks = response.data;
                 }
-            );
+            });
     };
 
     $scope.sourceClip = function (sourceUuid) {
-        var requestData = $.param({
-            json: JSON.stringify({
+        ServerRequest.serverRequest(
+            JSON.stringify({
                 uuid: sourceUuid
-            })
-        });
+            }),
+            "clipsJSON",
+            function (response) {
+                var selectedSource = $filter('filter')($scope.sources, {'uuid': sourceUuid});
+                if (selectedSource.length === 1) {
+                    selectedSource[0].clips = response.data;
 
-        var config = {
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
-            }
-        };
+                    angular.forEach(selectedSource[0].clips, function (clip) {
+                        var startMarkUuid = clip.startMark.uuid;
+                        var endMarkUuid = clip.endMark.uuid;
 
-        $http.post("clipsJSON", requestData, config)
-            .then(
-                function (response) {
-                    var selectedSource = $filter('filter')($scope.sources, {'uuid': sourceUuid});
-                    if (selectedSource.length === 1) {
-                        selectedSource[0].clips = response.data;
+                        var startMark = $filter('filter')(selectedSource[0].marks, {'uuid': startMarkUuid});
+                        if (startMark !== undefined && startMark.length === 1) {
+                            clip.startMark = startMark[0];
+                        }
 
-                        angular.forEach(selectedSource[0].clips, function (clip) {
-                            var startMarkUuid = clip.startMark.uuid;
-                            var endMarkUuid = clip.endMark.uuid;
-
-                            var startMark = $filter('filter')(selectedSource[0].marks, {'uuid': startMarkUuid});
-                            if (startMark !== undefined && startMark.length === 1) {
-                                clip.startMark = startMark[0];
-                            }
-
-                            var endMark = $filter('filter')(selectedSource[0].marks, {'uuid': endMarkUuid});
-                            if (endMark !== undefined && endMark.length === 1) {
-                                clip.endMark = endMark[0];
-                            }
-                        });
-                    }
-                },
-                function (response) {
-                    // failure callback
+                        var endMark = $filter('filter')(selectedSource[0].marks, {'uuid': endMarkUuid});
+                        if (endMark !== undefined && endMark.length === 1) {
+                            clip.endMark = endMark[0];
+                        }
+                    });
                 }
-            );
+            });
     };
 
     $scope.splitSource = function () {
-        var requestData = $.param({
-            json: JSON.stringify({
+        ServerRequest.serverRequest(
+            JSON.stringify({
                 uuid: $scope.selectedSource.uuid,
                 startTime: 0.0,
                 endTime: 10.0
-            })
-        });
-
-        var config = {
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
-            }
-        };
-
-        $http.post("splitSource", requestData, config)
-            .then(
-                function (response) {
-
-                },
-                function (response) {
-                    // failure callback
-                }
-            );
+            }),
+            "splitSource");
     };
 
     $scope.convertToSeconds = function () {
@@ -239,31 +163,28 @@ sourceVideoApp.controller('sourceVideoCtrl', function ($scope, $http, $filter) {
         newMark.time = $scope.convertToSeconds();
         $scope.selectedSource.marks.push(newMark);
 
-        var requestData = $.param({
-            json: JSON.stringify({
+        ServerRequest.serverRequest(
+            JSON.stringify({
                 uuid: $scope.selectedSource.uuid,
                 time: newMark.time
-            })
-        });
-
-        var config = {
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
-            }
-        };
-
-        $http.post("createMark", requestData, config)
-            .then(
-                function (response) {
-                    var responseData = response.data;
-                    if (responseData.length === 1) {
-                        newMark.uuid = responseData[0].uuid;
-                    }
-                },
-                function (response) {
-                    // failure callback
+            }),
+            "createMark",
+            function (response) {
+                var responseData = response.data;
+                if (responseData.length === 1) {
+                    newMark.uuid = responseData[0].uuid;
                 }
-            );
+            });
+    };
+
+    $scope.lockInClip = function (clip) {
+        clip.lockedIn = true;
+
+        ServerRequest.serverRequest(
+            JSON.stringify({
+                uuid: clip.uuid
+            }),
+            "lockInClip");
     };
 
     $scope.createClip = function () {
@@ -273,57 +194,29 @@ sourceVideoApp.controller('sourceVideoCtrl', function ($scope, $http, $filter) {
 
         $scope.selectedSource.clips.push(newClip);
 
-        var requestData = $.param({
-            json: JSON.stringify({
+        ServerRequest.serverRequest(
+            JSON.stringify({
                 uuid: $scope.selectedSource.uuid
-            })
-        });
-
-        var config = {
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
-            }
-        };
-
-        $http.post("createClip", requestData, config)
-            .then(
-                function (response) {
-                    var responseData = response.data;
-                    if (responseData.length === 1) {
-                        newClip.uuid = responseData[0].uuid;
-                    }
-                },
-                function (response) {
-                    // failure callback
+            }),
+            "createClip",
+            function (response) {
+                var responseData = response.data;
+                if (responseData.length === 1) {
+                    newClip.uuid = responseData[0].uuid;
                 }
-            );
+            });
     };
 
     $scope.deleteClip = function (clip) {
         var index = $scope.selectedSource.clips.indexOf(clip);
         $scope.selectedSource.clips.splice(index, 1);
 
-        var requestData = $.param({
-            json: JSON.stringify({
+
+        ServerRequest.serverRequest(
+            JSON.stringify({
                 uuid: clip.uuid
-            })
-        });
-
-        var config = {
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
-            }
-        };
-
-        $http.post("removeClip", requestData, config)
-            .then(
-                function (response) {
-
-                },
-                function (response) {
-                    // failure callback
-                }
-            );
+            }),
+            "removeClip");
     };
 
     $scope.toTimeString = function (time) {
@@ -347,27 +240,11 @@ sourceVideoApp.controller('sourceVideoCtrl', function ($scope, $http, $filter) {
         var index = $scope.selectedSource.marks.indexOf(mark);
         $scope.selectedSource.marks.splice(index, 1);
 
-        var requestData = $.param({
-            json: JSON.stringify({
+        ServerRequest.serverRequest(
+            JSON.stringify({
                 uuid: mark.uuid
-            })
-        });
-
-        var config = {
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
-            }
-        };
-
-        $http.post("removeMark", requestData, config)
-            .then(
-                function (response) {
-
-                },
-                function (response) {
-                    // failure callback
-                }
-            );
+            }),
+            "removeMark");
     };
 
     $scope.jumpToMark = function (mark) {

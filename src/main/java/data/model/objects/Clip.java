@@ -13,17 +13,19 @@ public class Clip extends DatabaseObject {
     private Mark startMark = null;
     private Mark endMark = null;
     private String fileName = "";
+    private Boolean lockedIn = false;
 
     public Clip() {
         super();
     }
 
-    public Clip(UUID uuid, Source source, Mark startMark, Mark endMark, String fileName) {
+    public Clip(UUID uuid, Source source, Mark startMark, Mark endMark, String fileName, Boolean lockedIn) {
         super(uuid);
         this.source = source;
         this.startMark = startMark;
         this.endMark = endMark;
         this.fileName = fileName;
+        this.lockedIn = lockedIn;
     }
 
     public Source getSource() {
@@ -82,5 +84,14 @@ public class Clip extends DatabaseObject {
 
     public void setFileName(String fileName) {
         this.fileName = fileName;
+    }
+
+    @JSONMappable("lockedIn")
+    public Boolean getLockedIn() {
+        return lockedIn;
+    }
+
+    public void setLockedIn(Boolean lockedIn) {
+        this.lockedIn = lockedIn;
     }
 }
