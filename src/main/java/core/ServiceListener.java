@@ -13,16 +13,12 @@ public class ServiceListener implements ServletContextListener {
     private static Logger log = Logger.getLogger(ServiceListener.class);
 
     public ServiceListener() {
-
     }
 
     public void contextInitialized(ServletContextEvent event) {
-        //ServletContext context = event.getServletContext();
-
         AppManager.init();
         RequestMapper.buildMappings();
         ResourceFileMapper.buildResources();
-
     }
 
     public void contextDestroyed(ServletContextEvent event) {

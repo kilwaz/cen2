@@ -101,8 +101,6 @@
 
                 <input type="number" min="0" max="10" ng-change="setSourceSpeed()" ng-model="playBackSpeed"/>
 
-                <input type="button" value="Split" ng-click="splitSource()"/>
-
                 <div class="container no-gutters">
                     <div class="row no-gutters">
                         <div class="col">
@@ -143,7 +141,17 @@
                                         </div>
                                     </div>
 
-                                    <input type="button" value="Lock In" ng-click="lockInClip(clip)"/>
+                                    <div ng-switch on="clip.lockedIn">
+                                        <div ng-switch-default>
+                                            <input type="button" value="Lock In" ng-click="lockInClip(clip)"/>
+                                        </div>
+                                        <div ng-switch-when="true">
+                                            <input type="button" value="Unlock" ng-click="unlockClip(clip)"/>
+                                            <input type="button" value="Split" ng-click="splitClip(clip)"/>
+                                            <input type="button" value="Finalise" ng-click="finaliseClip(clip)"/>
+                                        </div>
+                                    </div>
+
                                     <input type="button" value="Delete" ng-click="deleteClip(clip)"/>
                                 </div>
                             </div>

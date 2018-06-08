@@ -2,6 +2,11 @@ package utils.managers;
 
 import core.process.ManagedThread;
 import org.apache.log4j.Logger;
+import org.quartz.JobBuilder;
+import org.quartz.JobDetail;
+import org.quartz.SimpleScheduleBuilder;
+import org.quartz.TriggerBuilder;
+import utils.timers.ProcessClearJob;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +20,16 @@ public class ProcessManager {
     public ProcessManager() {
         instance = this;
         runningThreads = new ArrayList<>();
+
+        JobDetail processClearJob = JobBuilder.newJob(ProcessClearJob.class).build();
+
+        SimpleScheduleBuilder processClearSimpleScheduleBuilder = SimpleScheduleBuilder.simpleSchedule();
+        TriggerBuilder processClearTriggerBuilder = TriggerBuilder.newTrigger();
+
+        processClearSimpleScheduleBuilder.repeatForever().withIntervalInMilliseconds(30000); // 30 Seconds
+
+        JobManager.getInstance().scheduleJob(processClearJob, processClearTriggerBuilder.withSchedule(processClearSimpleScheduleBuilder).build());
+        processClearTriggerBuilder.startNow();
     }
 
     public synchronized static ProcessManager getInstance() {
@@ -36,5 +51,15 @@ public class ProcessManager {
 
     public List<ManagedThread> getRunningThreads() {
         return runningThreads;
+    }
+
+    public void clearFinishedProcesses() {
+        List<ManagedThread> loopList = new ArrayList<>(runningThreads);
+
+        for (ManagedThread managedThread : loopList) {
+            if (!managedThread.getIsRunning()) {
+                runningThreads.remove(managedThread);
+            }
+        }
     }
 }

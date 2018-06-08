@@ -1,20 +1,21 @@
 package core.process;
 
-import data.model.objects.Source;
+import data.model.objects.Clip;
 import org.apache.log4j.Logger;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Flow;
 
 public class Encoder implements Flow.Subscriber<LogMessage> {
     private static Logger log = Logger.getLogger(Encoder.class);
-    private Source source;
-    private ManagedThread managedThread;
-    private ProcessHelper processHelper;
+    private Clip clip;
+    private ManagedThread pass1ManagedThread;
+    private ProcessHelper pass1ProcessHelper;
 
-    private Integer pass = 0;
+    private ManagedThread pass2ManagedThread;
+    private ProcessHelper pass2ProcessHelper;
+    private Integer pass = 1;
 
     private List<Flow.Subscription> subscriptions = new ArrayList<>();
 
@@ -22,23 +23,12 @@ public class Encoder implements Flow.Subscriber<LogMessage> {
         super();
     }
 
-    public Encoder source(Source source) {
-        this.source = source;
-        return this;
-    }
-
-    public Encoder pass(Integer pass) {
-        this.pass = pass;
+    public Encoder clip(Clip clip) {
+        this.clip = clip;
         return this;
     }
 
     public void execute() {
-        var encodedProgress = source.getEncodedProgress();
-        encodedProgress.setPassPhase(pass);
-        encodedProgress.save();
-        source.setEncodedProgress(encodedProgress);
-        source.save();
-
 //        CRF
 //        32   lowest
 //        29   very low
@@ -47,22 +37,27 @@ public class Encoder implements Flow.Subscriber<LogMessage> {
 //        20   high
 //        17   perceptually lossless
 
-        String command = "";
-        if (pass.equals(1)) {
-            command = "/usr/bin/ffmpeg -y -i " + source.getFileName() + " -c:v libvpx-vp9 -c:a libopus -pass " + pass + " -passlogfile /home/kilwaz/srcLog/" + source.getUuidString() + " -b:v 0 -deadline good -crf 17 -f webm /dev/null";
-        } else if (pass.equals(2)) {
-            command = "/usr/bin/ffmpeg -y -i " + source.getFileName() + " -c:v libvpx-vp9 -c:a libopus -pass " + pass + " -passlogfile /home/kilwaz/srcLog/" + source.getUuidString() + " -b:v 0 -deadline good -crf 17 -f webm /home/kilwaz/srcDone/encoded-" + source.getUuidString();
-        }
+        String command = "/usr/bin/ffmpeg -y -i " + clip.getFileName() + " -c:v libvpx-vp9 -c:a libopus -pass 1 -passlogfile /home/kilwaz/srcLog/" + clip.getUuidString() + " -b:v 0 -deadline good -crf 17 -f webm /dev/null";
 
-        processHelper = new ProcessHelper()
+        pass1ProcessHelper = new ProcessHelper()
                 .command(command)
-                .processDescription("Encoding " + source.getFileName())
-                .processReference(source.getUuidString())
+                .processDescription("Encoding " + clip.getSource().getFileName())
+                .processReference(clip.getUuidString())
                 .logSubscriber(this);
 
-        managedThread = new ManagedThread()
-                .managedRunnable(processHelper)
+        pass1ManagedThread = new ManagedThread()
+                .managedRunnable(pass1ProcessHelper)
                 .start();
+
+        command = "/usr/bin/ffmpeg -y -i " + clip.getFileName() + " -c:v libvpx-vp9 -c:a libopus -pass 2 -passlogfile /home/kilwaz/srcLog/" + clip.getUuidString() + " -b:v 0 -deadline good -crf 17 -f webm /home/kilwaz/srcDone/encoded-" + clip.getUuidString() + "." + clip.getSource().getFileExtension();
+
+        pass2ProcessHelper = new ProcessHelper()
+                .command(command)
+                .processDescription("Encoding " + clip.getSource().getFileName())
+                .processReference(clip.getUuidString())
+                .logSubscriber(this);
+
+        pass2ManagedThread = new ManagedThread().managedRunnable(pass2ProcessHelper);
     }
 
     @Override
@@ -80,18 +75,19 @@ public class Encoder implements Flow.Subscriber<LogMessage> {
             message = message.substring(0, message.indexOf(" "));
 
             Integer frame = Integer.parseInt(message);
-            var encodedProgress = source.getEncodedProgress();
-            if (pass.equals(1)) {
-                encodedProgress.setPass1Progress(frame);
-            } else if (pass.equals(2)) {
-                encodedProgress.setPass2Progress(frame);
 
-                File pass1LogFile = new File("/home/kilwaz/srcLog/" + source.getUuidString() + "-0.log");
-                if (pass1LogFile.exists()) {
-                    pass1LogFile.delete();
-                }
-            }
-            encodedProgress.save();
+//            var encodedProgress = source.getEncodedProgress();
+//            if (pass.equals(1)) {
+//                encodedProgress.setPass1Progress(frame);
+//            } else if (pass.equals(2)) {
+//                encodedProgress.setPass2Progress(frame);
+//
+//                File pass1LogFile = new File("/home/kilwaz/srcLog/" + source.getUuidString() + "-0.log");
+//                if (pass1LogFile.exists()) {
+//                    pass1LogFile.delete();
+//                }
+//            }
+//            encodedProgress.save();
         }
 
         for (Flow.Subscription subscription : subscriptions) {
@@ -108,5 +104,8 @@ public class Encoder implements Flow.Subscriber<LogMessage> {
     @Override
     public void onComplete() {
         log.info("We completed a subscription!");
+        if (pass == 1) {
+            pass2ManagedThread.start();
+        }
     }
 }

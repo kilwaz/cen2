@@ -1,9 +1,7 @@
 package requests.actions;
 
 import core.Request;
-import core.process.Encoder;
-import data.model.dao.SourceDAO;
-import data.model.objects.Source;
+import data.model.objects.Clip;
 import data.model.objects.json.JSONContainer;
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
@@ -12,13 +10,14 @@ import requests.annotations.RequestName;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.UUID;
 
-@RequestName("encodeSource")
+@RequestName("unlockClip")
 @Action
-public class EncodeSource extends Request {
-    private static Logger log = Logger.getLogger(EncodeSource.class);
+public class UnlockClip extends Request {
+    private static Logger log = Logger.getLogger(UnlockClip.class);
 
-    public EncodeSource() {
+    public UnlockClip() {
         super();
     }
 
@@ -27,13 +26,12 @@ public class EncodeSource extends Request {
         JSONContainer incomingRequestData = getIncomingRequestData();
         JSONObject jsonObject = incomingRequestData.toJSONObject();
 
-        if (jsonObject.has("uuid") && jsonObject.has("pass")) {
-            SourceDAO sourceDAO = new SourceDAO();
-            Source source = sourceDAO.getSourceByUUID(jsonObject.getString("uuid"));
-
-//            Encoder encoder = new Encoder().source(source);
-//            encoder.pass(jsonObject.getInt("pass"));
-//            encoder.execute();
+        if (jsonObject.has("uuid")) {
+            Clip clip = Clip.load(UUID.fromString(jsonObject.getString("uuid")), Clip.class);
+            if (clip != null) {
+                clip.setLockedIn(false);
+                clip.save();
+            }
         }
     }
 }

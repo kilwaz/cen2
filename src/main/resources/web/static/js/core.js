@@ -134,16 +134,6 @@ sourceVideoApp.controller('sourceVideoCtrl', function ($scope, $http, $filter, S
             });
     };
 
-    $scope.splitSource = function () {
-        ServerRequest.serverRequest(
-            JSON.stringify({
-                uuid: $scope.selectedSource.uuid,
-                startTime: 0.0,
-                endTime: 10.0
-            }),
-            "splitSource");
-    };
-
     $scope.convertToSeconds = function () {
         return $scope.timeSecOnes
             + ($scope.timeSecTens * 10)
@@ -185,6 +175,32 @@ sourceVideoApp.controller('sourceVideoCtrl', function ($scope, $http, $filter, S
                 uuid: clip.uuid
             }),
             "lockInClip");
+    };
+
+    $scope.unlockClip = function (clip) {
+        clip.lockedIn = false;
+
+        ServerRequest.serverRequest(
+            JSON.stringify({
+                uuid: clip.uuid
+            }),
+            "unlockClip");
+    };
+
+    $scope.splitClip = function (clip) {
+        ServerRequest.serverRequest(
+            JSON.stringify({
+                uuid: clip.uuid
+            }),
+            "splitClip");
+    };
+
+    $scope.finaliseClip = function (clip) {
+        ServerRequest.serverRequest(
+            JSON.stringify({
+                uuid: clip.uuid
+            }),
+            "finaliseClip");
     };
 
     $scope.createClip = function () {

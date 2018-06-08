@@ -1,7 +1,6 @@
 package core.process;
 
 import data.model.objects.Clip;
-import data.model.objects.Source;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
@@ -10,13 +9,10 @@ import java.util.concurrent.Flow;
 
 public class Splitter implements Flow.Subscriber<LogMessage> {
     private static Logger log = Logger.getLogger(Splitter.class);
-    private Source source;
+    private Clip clip;
     private ManagedThread managedThread;
     private ProcessHelper processHelper;
     private StringBuilder jsonResult = new StringBuilder();
-
-    private Double startTime = 0d;
-    private Double endTime = 0d;
 
     private List<Flow.Subscription> subscriptions = new ArrayList<>();
 
@@ -24,18 +20,8 @@ public class Splitter implements Flow.Subscriber<LogMessage> {
         super();
     }
 
-    public Splitter source(Source source) {
-        this.source = source;
-        return this;
-    }
-
-    public Splitter startTime(Double startTime) {
-        this.startTime = startTime;
-        return this;
-    }
-
-    public Splitter endTime(Double endTime) {
-        this.endTime = endTime;
+    public Splitter clip(Clip clip) {
+        this.clip = clip;
         return this;
     }
 
@@ -48,12 +34,13 @@ public class Splitter implements Flow.Subscriber<LogMessage> {
     }
 
     public void execute() {
-        Clip clip = Clip.create(Clip.class);
-        clip.setSource(source);
-        clip.setFileName("/home/kilwaz/srcDone/clip-" + clip.getUuidString() + "." + source.getFileExtension());
+        clip.setFileName("/home/kilwaz/srcDone/clip-" + clip.getUuidString() + "." + clip.getSource().getFileExtension());
         clip.save();
 
-        String command = "/usr/bin/ffmpeg -ss " + convertTimeToString(startTime) + " -i " + source.getFileName() + " -to " + convertTimeToString(endTime - startTime) + " -acodec copy -vcodec copy -async 1 -y " + clip.getFileName();
+        Double startTime = clip.getStartMark().getTime();
+        Double endTime = clip.getEndMark().getTime();
+
+        String command = "/usr/bin/ffmpeg -ss " + convertTimeToString(startTime) + " -i " + clip.getSource().getFileName() + " -to " + convertTimeToString(endTime - startTime) + " -acodec copy -vcodec copy -async 1 -y -force_key_frames 00:00:00.000 " + clip.getFileName();
 
         log.info("Splitter command = " + command);
 
