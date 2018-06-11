@@ -10,7 +10,7 @@
 
     <link href="https://resources.kilwaz.me/css/bootstrap-4.1.1.min.css" rel="stylesheet">
     <link href="https://resources.kilwaz.me/css/styles.css" rel="stylesheet">
-    <link href="https://resources.kilwaz.me/css/fontawesome-all-5.0.10.min.css" rel="stylesheet">
+    <link href="https://resources.kilwaz.me/css/fontawesome-all-5.0.13.min.css" rel="stylesheet">
     <link href="https://resources.kilwaz.me/css/jquery-ui-1.12.1.min.css" rel="stylesheet">
     <link href="https://resources.kilwaz.me/css/jquery-ui.theme-1.12.1.min.css" rel="stylesheet">
     <link href="https://resources.kilwaz.me/css/jquery-ui.structure-1.12.1.min.css" rel="stylesheet">
