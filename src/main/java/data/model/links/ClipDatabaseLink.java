@@ -3,6 +3,7 @@ package data.model.links;
 
 import data.model.DatabaseLink;
 import data.model.objects.Clip;
+import data.model.objects.EncodedProgress;
 import data.model.objects.Mark;
 import data.model.objects.Source;
 
@@ -19,5 +20,6 @@ public class ClipDatabaseLink extends DatabaseLink {
         link("end_mark", method("getEndMarkUUID"), method("setEndMark", Mark.class)); // 4
         link("file_name", method("getFileName"), method("setFileName", String.class)); // 5
         link("locked_in", method("getLockedIn"), method("setLockedIn", Boolean.class)); // 6
+        link("encoded_progress_id", method("getEncodedProgressUUID"), method("setEncodedProgress", EncodedProgress.class)); // 7
     }
 }

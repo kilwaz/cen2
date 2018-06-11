@@ -4,6 +4,7 @@ drop table if exists source;
 drop table if exists person;
 drop table if exists picture;
 drop table if exists clip;
+drop table if exists appearances;
 drop table if exists mark;
 drop table if exists process;
 
@@ -48,6 +49,12 @@ create table picture(
     source char(36),
     PRIMARY KEY (uuid));
 
+create table appearances (
+    uuid char(36) NOT NULL,
+    person_id char(36),
+    clip_id char(36),
+    PRIMARY KEY (uuid));
+
 create table clip(
     uuid char(36) NOT NULL,
     source char(36),
@@ -55,6 +62,7 @@ create table clip(
     end_mark char(36),
     file_name varchar(1000),
     locked_in bool,
+    encoded_progress_id char(36),
     PRIMARY KEY (uuid));
 
 create table mark(

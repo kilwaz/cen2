@@ -2,6 +2,7 @@ package requests.actions;
 
 import core.Request;
 import data.model.objects.Clip;
+import data.model.objects.EncodedProgress;
 import data.model.objects.Source;
 import data.model.objects.json.JSONContainer;
 import org.apache.log4j.Logger;
@@ -31,10 +32,14 @@ public class CreateClip extends Request {
             String uuid = jsonObject.getString("uuid");
             if (!uuid.isEmpty()) {
                 Source source = Source.load(UUID.fromString(uuid), Source.class);
+                EncodedProgress encodedProgress = EncodedProgress.create(EncodedProgress.class);
 
                 Clip clip = Clip.create(Clip.class);
                 clip.setSource(source);
+                clip.setEncodedProgress(encodedProgress);
                 clip.save();
+
+                encodedProgress.save();
 
                 JSONContainer outgoingJsonContainer = new JSONContainer();
                 outgoingJsonContainer.dbDataItem(clip);

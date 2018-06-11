@@ -1,8 +1,7 @@
 package requests.json;
 
 import core.Request;
-import data.model.dao.SourceDAO;
-import data.model.objects.Source;
+import data.model.objects.Clip;
 import data.model.objects.json.JSONContainer;
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
@@ -27,9 +26,9 @@ public class EncodedProgressJSON extends Request {
         if (jsonObject.has("uuid")) {
             String uuid = jsonObject.getString("uuid");
             if (!uuid.isEmpty()) {
-                Source source = Source.load(UUID.fromString(uuid), Source.class);
+                Clip clip = Clip.load(UUID.fromString(uuid), Clip.class);
 
-                JSONContainer jsonContainer = new JSONContainer(source.getEncodedProgress().asJSON());
+                JSONContainer jsonContainer = new JSONContainer(clip.getEncodedProgress().asJSON());
                 jsonContainer.writeToResponse(response);
             }
         }

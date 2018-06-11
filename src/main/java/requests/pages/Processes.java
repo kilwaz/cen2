@@ -19,9 +19,6 @@ public class Processes extends Request {
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) {
-//        ProcessManager processManager = ProcessManager.getInstance();
-//        List<ManagedThread> managedThreadList = processManager.getRunningThreads();
-//
-//        request.setAttribute("activeThreads", processManager.getActiveThreads());
+
     }
 }

@@ -82,5 +82,8 @@ public class Splitter implements Flow.Subscriber<LogMessage> {
     @Override
     public void onComplete() {
         log.info("We completed a subscription!");
+        Prober prober = new Prober();
+        prober.addClip(clip);
+        prober.execute();
     }
 }

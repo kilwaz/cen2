@@ -1,10 +1,7 @@
-var processSourceApp = angular.module('processSourceApp', []);
+var processSourceApp = angular.module('encodedProgressApp', []);
 
-console.log("Testing logging");
-
-processSourceApp.controller('processSourceCtrl', function ($scope, $http, $filter) {
-    console.log("Started");
-    getSources($scope);
+processSourceApp.controller('encodedProgressCtrl', function ($scope, $http, $filter) {
+    getClips($scope);
 
     $scope.sourceInfo = function (sourceRef) {
         var requestData = $.param({
@@ -33,10 +30,10 @@ processSourceApp.controller('processSourceCtrl', function ($scope, $http, $filte
             );
     };
 
-    $scope.updateEncodedProgress = function (source) {
+    $scope.updateEncodedProgress = function (clip) {
         var requestData = $.param({
             json: JSON.stringify({
-                uuid: source.uuid
+                uuid: clip.uuid
             })
         });
 
@@ -49,7 +46,7 @@ processSourceApp.controller('processSourceCtrl', function ($scope, $http, $filte
         $http.post("encodedProgressJSON", requestData, config)
             .then(
                 function (response) {
-                    var selectedSource = $filter('filter')($scope.sources, {'uuid': source.uuid});
+                    var selectedSource = $filter('filter')($scope.clips, {'uuid': clip.uuid});
                     if (selectedSource.length === 1) {
                         selectedSource[0].encodedProgress = response.data;
                     }
@@ -60,11 +57,11 @@ processSourceApp.controller('processSourceCtrl', function ($scope, $http, $filte
             );
     };
 
-    $scope.calcPercentEncoded = function (source, pass) {
+    $scope.calcPercentEncoded = function (clip, pass) {
         if (pass === 1) {
-            return ((source.encodedProgress.pass1Progress / source.encodedProgress.totalFrames) * 100);
+            return ((clip.encodedProgress.pass1Progress / clip.encodedProgress.totalFrames) * 100);
         } else if (pass === 2) {
-            return ((source.encodedProgress.pass2Progress / source.encodedProgress.totalFrames) * 100);
+            return ((clip.encodedProgress.pass2Progress / clip.encodedProgress.totalFrames) * 100);
         }
     };
 
@@ -72,37 +69,11 @@ processSourceApp.controller('processSourceCtrl', function ($scope, $http, $filte
         return source.sourceInfo.streams[0].width + " x " + source.sourceInfo.streams[0].height;
     };
 
-    $scope.calcDuration = function (source) {
-        var time = source.sourceInfo.format.duration;
+    $scope.calcDuration = function (time) {
         var timeHour = Math.floor(time / 3600);
         var timeMin = Math.floor((time / 60) % 60);
         var timeSec = Math.floor(time % 60);
 
         return timeHour + ":" + timeMin + ":" + timeSec
-    };
-
-    $scope.encodeSource = function (pass, source) {
-        var requestData = $.param({
-            json: JSON.stringify({
-                pass: pass,
-                uuid: source.uuid
-            })
-        });
-
-        var config = {
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
-            }
-        };
-
-        $http.post("encodeSource", requestData, config)
-            .then(
-                function (response) {
-                    // success callback
-                },
-                function (response) {
-                    // failure callback
-                }
-            );
     };
 });
