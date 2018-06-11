@@ -29,8 +29,6 @@ public class XMLImporter {
     }
 
     public void execute() {
-        log.info("Executing");
-
         try {
             Document dom;
 
@@ -40,13 +38,9 @@ public class XMLImporter {
             dom = db.parse(file);
 
             Element docEle = dom.getDocumentElement();
-
-            log.info("Doc element is called " + docEle.getTagName());
             if ("Sources".equals(docEle.getTagName())) {
-                log.info("Found Sources");
                 NodeList sourceNodeList = docEle.getElementsByTagName("Source");
-
-                log.info("Sources total = " + sourceNodeList.getLength());
+                Prober prober = new Prober();
 
                 for (int i = 0; i < sourceNodeList.getLength(); i++) { // Loop through each Source
                     Element sourceNode = (Element) sourceNodeList.item(i);
@@ -54,10 +48,6 @@ public class XMLImporter {
                     String name = sourceNode.getElementsByTagName("name").item(0).getTextContent();
                     String fileName = sourceNode.getElementsByTagName("fileName").item(0).getTextContent();
                     String url = sourceNode.getElementsByTagName("url").item(0).getTextContent();
-
-                    log.info("Name = " + name);
-                    log.info("FileName = " + fileName);
-                    log.info("URL = " + url);
 
                     Source newSource = Source.create(Source.class);
                     EncodedProgress newEncodedProgress = EncodedProgress.create(EncodedProgress.class);
@@ -70,9 +60,10 @@ public class XMLImporter {
                     newSource.save();
                     newEncodedProgress.save();
 
-                    Prober prober = new Prober().source(newSource);
-                    prober.execute();
+                    prober.addSource(newSource);
                 }
+
+                prober.execute();
             }
         } catch (ParserConfigurationException | SAXException | IOException ex) {
             ex.printStackTrace();

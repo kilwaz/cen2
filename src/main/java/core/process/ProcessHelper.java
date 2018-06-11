@@ -43,12 +43,12 @@ public class ProcessHelper extends ManagedRunnable {
             p = Runtime.getRuntime().exec(getCommand());
 
             inputListener = new ProcessListener().inputStream(p.getInputStream()).processHelper(this);
-            errorListener = new ProcessListener().errorStream(p.getErrorStream()).processHelper(this);
-            outputListener = new ProcessListener().outputStream(p.getOutputStream()).processHelper(this);
+//            errorListener = new ProcessListener().errorStream(p.getErrorStream()).processHelper(this);
+//            outputListener = new ProcessListener().outputStream(p.getOutputStream()).processHelper(this);
 
             managedInputThread = new ManagedThread().managedRunnable(inputListener).start();
-            managedErrorThread = new ManagedThread().managedRunnable(errorListener).start();
-            managedOutputThread = new ManagedThread().managedRunnable(outputListener).start();
+//            managedErrorThread = new ManagedThread().managedRunnable(errorListener).start();
+//            managedOutputThread = new ManagedThread().managedRunnable(outputListener).start();
 
             triggerLopSubscribe();
 
@@ -77,8 +77,8 @@ public class ProcessHelper extends ManagedRunnable {
     private void triggerLopSubscribe() {
         if (logSubscriber != null) {
             inputListener.subscribe(logSubscriber);
-            errorListener.subscribe(logSubscriber);
-            outputListener.subscribe(logSubscriber);
+//            errorListener.subscribe(logSubscriber);
+//            outputListener.subscribe(logSubscriber);
         }
     }
 
@@ -95,6 +95,12 @@ public class ProcessHelper extends ManagedRunnable {
     public ProcessHelper processDescription(String processDescription) {
         this.processDescription = processDescription;
         return this;
+    }
+
+    public void unsubscribeAll() {
+        if (logSubscriber != null) {
+            inputListener.close();
+        }
     }
 
     public String getProcessReference() {

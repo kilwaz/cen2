@@ -63,11 +63,14 @@ public class ProcessListener extends ManagedRunnable {
         } catch (IOException ex) {
             Error.PROCESS_LISTEN.record().create(ex);
         } finally {
-            logPublisher.submit(new LogMessage()
-                    .processorType(processorType)
-                    .processHelper(processHelper)
-                    .finalMessage(true));
-            logPublisher.close();
+            if (!logPublisher.isClosed()) {
+                if (processorType.equals(PROCESSOR_INPUT)) {
+                    logPublisher.submit(new LogMessage()
+                            .processorType(processorType)
+                            .processHelper(processHelper)
+                            .finalMessage(true));
+                }
+            }
 
             completeProcess();
         }
@@ -80,6 +83,9 @@ public class ProcessListener extends ManagedRunnable {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+        if (logPublisher != null) {
+            logPublisher.close();
         }
     }
 
