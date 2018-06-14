@@ -76,10 +76,23 @@ public class Prober implements Flow.Subscriber<LogMessage> {
         }
 
         description = "Probing " + fileName;
-        command = "/usr/bin/ffprobe -v quiet -print_format json -show_format -show_streams " + fileName;
+//        command = "/usr/bin/ffprobe -v quiet -print_format json -show_format -show_streams " + fileName;
+
+        ProcessParams processParams = new ProcessParams();
+        processParams.path("/usr/bin/ffprobe");
+        processParams
+                .add("-v")
+                .add("quiet")
+                .add("-print_format")
+                .add("json")
+                .add("-show_format")
+                .add("-show_streams")
+                .add(fileName);
+
+        log.info("Prober command = " + processParams.getCommand());
 
         processHelper = new ProcessHelper()
-                .command(command)
+                .command(processParams)
                 .processDescription(description)
                 .processReference(reference)
                 .logSubscriber(this);
@@ -128,29 +141,30 @@ public class Prober implements Flow.Subscriber<LogMessage> {
 
     private void processProbeInfo(JSONObject probeJSON, EncodedProgress encodedProgress) {
         // Find the total number of frames calculated from average frame rate and duration
-        if (probeJSON.has("streams") && probeJSON.has("format")) {
-            var formatJSON = probeJSON.getJSONObject("format");
+        if (probeJSON.has("streams")) {
             var streamArray = probeJSON.getJSONArray("streams");
+            if (streamArray.length() > 0) {
+                for (int i = 0; i < streamArray.length(); i++) {
+                    var videoStreamJSON = streamArray.getJSONObject(i);
 
-            if (formatJSON.has("duration")) {
-                var duration = formatJSON.getDouble("duration");
+                    if (videoStreamJSON.has("codec_type") && "video".equals(videoStreamJSON.getString("codec_type"))) {
 
-                if (streamArray.length() > 0) {
-                    var videoStreamJSON = streamArray.getJSONObject(0);
-                    if (videoStreamJSON.has("avg_frame_rate")) {
-                        var avgFrameRate = videoStreamJSON.getString("avg_frame_rate");
-                        var frameRateSplit = avgFrameRate.split("/");
+                        if (videoStreamJSON.has("avg_frame_rate") && videoStreamJSON.has("duration")) {
+                            var avgFrameRate = videoStreamJSON.getString("avg_frame_rate");
+                            var duration = videoStreamJSON.getDouble("duration");
+                            var frameRateSplit = avgFrameRate.split("/");
 
-                        if (frameRateSplit.length == 2) {
-                            var firstSum = Double.parseDouble(frameRateSplit[0]);
-                            var secondSum = Double.parseDouble(frameRateSplit[1]);
+                            if (frameRateSplit.length == 2) {
+                                var firstSum = Double.parseDouble(frameRateSplit[0]);
+                                var secondSum = Double.parseDouble(frameRateSplit[1]);
 
-                            Double totalFrames = duration * (firstSum / secondSum);
-                            log.info(duration + " * " + firstSum + "/" + secondSum + " = " + (firstSum / secondSum) + " = " + totalFrames);
-                            encodedProgress.setTotalFrames(totalFrames.intValue());
-                            encodedProgress.save();
+                                Double totalFrames = duration * (firstSum / secondSum);
+                                log.info(duration + " * " + firstSum + "/" + secondSum + " = " + (firstSum / secondSum) + " = " + totalFrames);
+                                encodedProgress.setTotalFrames(totalFrames.intValue());
+                                encodedProgress.save();
 
-                            processNextSource();
+                                processNextSource();
+                            }
                         }
                     }
                 }

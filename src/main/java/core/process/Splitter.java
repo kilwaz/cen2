@@ -40,12 +40,32 @@ public class Splitter implements Flow.Subscriber<LogMessage> {
         Double startTime = clip.getStartMark().getTime();
         Double endTime = clip.getEndMark().getTime();
 
-        String command = "/usr/bin/ffmpeg -ss " + convertTimeToString(startTime) + " -i " + clip.getSource().getFileName() + " -to " + convertTimeToString(endTime - startTime) + " -acodec copy -vcodec copy -async 1 -y -force_key_frames 00:00:00.000 " + clip.getFileName();
+//        String command = "/usr/bin/ffmpeg -ss " + convertTimeToString(startTime) + " -i " + clip.getSource().getFileName() + " -to " + convertTimeToString(endTime - startTime) + " -acodec copy -vcodec copy -async 1 -y -force_key_frames 00:00:00.000 " + clip.getFileName();
 
-        log.info("Splitter command = " + command);
+        ProcessParams processParams = new ProcessParams();
+        processParams.path("/usr/bin/ffmpeg");
+        processParams
+                .add("-ss")
+                .add(convertTimeToString(startTime))
+                .add("-i")
+                .add(clip.getSource().getFileName())
+                .add("-to")
+                .add(convertTimeToString(endTime - startTime))
+                .add("-acodec")
+                .add("copy")
+                .add("-vcodec")
+                .add("copy")
+                .add("-async")
+                .add("1")
+                .add("-y")
+                .add("-force_key_frames")
+                .add("00:00:00.00")
+                .add(clip.getFileName());
+
+        log.info("Splitter command = " + processParams.getCommand());
 
         processHelper = new ProcessHelper()
-                .command(command)
+                .command(processParams)
                 .processDescription("Splitter " + clip.getFileName())
                 .processReference(clip.getUuidString())
                 .logSubscriber(this);

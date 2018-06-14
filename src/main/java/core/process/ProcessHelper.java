@@ -28,7 +28,7 @@ public class ProcessHelper extends ManagedRunnable {
         super.setCommandLine(true);
     }
 
-    public ProcessHelper command(String command) {
+    public ProcessHelper command(ProcessParams command) {
         super.setCommand(command);
         return this;
     }
@@ -40,7 +40,11 @@ public class ProcessHelper extends ManagedRunnable {
         errorListener = null;
         outputListener = null;
         try {
-            p = Runtime.getRuntime().exec(getCommand());
+            ProcessBuilder pb = new ProcessBuilder(getCommand().getParamsAsList());
+            pb.redirectErrorStream(true);
+            p = pb.start();
+
+//            p = Runtime.getRuntime().exec(getCommand());
 
             inputListener = new ProcessListener().inputStream(p.getInputStream()).processHelper(this);
 //            errorListener = new ProcessListener().errorStream(p.getErrorStream()).processHelper(this);

@@ -41,10 +41,38 @@ public class Encoder implements Flow.Subscriber<LogMessage> {
 //        20   high
 //        17   perceptually lossless
 
-        String command = "/usr/bin/ffmpeg -y -i " + clip.getFileName() + " -c:v libvpx-vp9 -c:a libopus -pass 1 -passlogfile " + FFMPEG_LOG_FILE_DIR + clip.getUuidString() + " -b:v 0 -deadline good -crf 17 -f webm /dev/null";
+        log.info("Starting encoding of " + clip.getUuidString() + " " + clip.getFileName());
+
+        ProcessParams processParamsPass1 = new ProcessParams();
+        processParamsPass1.path("/usr/bin/ffmpeg");
+        processParamsPass1
+                .add("-y")
+                .add("-i")
+                .add(clip.getFileName())
+                .add("-c:v")
+                .add("libvpx-vp9")
+                .add("-c:a")
+                .add("libopus")
+                .add("-pass")
+                .add("1")
+                .add("-passlogfile")
+                .add(FFMPEG_LOG_FILE_DIR + clip.getUuidString())
+                .add("-b:v")
+                .add("0")
+                .add("-deadline")
+                .add("good")
+                .add("-crf")
+                .add("17")
+                .add("-f")
+                .add("webm")
+                .add("/dev/null");
+
+//        String command = "/usr/bin/ffmpeg -y -i " + clip.getFileName() + " -c:v libvpx-vp9 -c:a libopus -pass 1 -passlogfile " + FFMPEG_LOG_FILE_DIR + clip.getUuidString() + " -b:v 0 -deadline good -crf 17 -f webm /dev/null";
+
+        log.info(processParamsPass1.getCommand());
 
         pass1ProcessHelper = new ProcessHelper()
-                .command(command)
+                .command(processParamsPass1)
                 .processDescription("Encoding " + clip.getSource().getFileName())
                 .processReference(clip.getUuidString())
                 .logSubscriber(this);
@@ -53,10 +81,36 @@ public class Encoder implements Flow.Subscriber<LogMessage> {
                 .managedRunnable(pass1ProcessHelper)
                 .start();
 
-        command = "/usr/bin/ffmpeg -y -i " + clip.getFileName() + " -c:v libvpx-vp9 -c:a libopus -pass 2 -passlogfile " + FFMPEG_LOG_FILE_DIR + clip.getUuidString() + " -b:v 0 -deadline good -crf 17 -f webm " + FFMPEG_FINAL_ENCODED_DESTINATION + "/encoded-" + clip.getUuidString() + "." + clip.getSource().getFileExtension();
+        ProcessParams processParamsPass2 = new ProcessParams();
+        processParamsPass2.path("/usr/bin/ffmpeg");
+        processParamsPass2
+                .add("-y")
+                .add("-i")
+                .add(clip.getFileName())
+                .add("-c:v")
+                .add("libvpx-vp9")
+                .add("-c:a")
+                .add("libopus")
+                .add("-pass")
+                .add("2")
+                .add("-passlogfile")
+                .add(FFMPEG_LOG_FILE_DIR + clip.getUuidString())
+                .add("-b:v")
+                .add("0")
+                .add("-deadline")
+                .add("good")
+                .add("-crf")
+                .add("17")
+                .add("-f")
+                .add("webm")
+                .add(FFMPEG_FINAL_ENCODED_DESTINATION + "/encoded-" + clip.getUuidString() + "." + clip.getSource().getFileExtension());
+
+//        command = "/usr/bin/ffmpeg -y -i " + clip.getFileName() + " -c:v libvpx-vp9 -c:a libopus -pass 2 -passlogfile " + FFMPEG_LOG_FILE_DIR + clip.getUuidString() + " -b:v 0 -deadline good -crf 17 -f webm " + FFMPEG_FINAL_ENCODED_DESTINATION + "/encoded-" + clip.getUuidString() + "." + clip.getSource().getFileExtension();
+
+        log.info(processParamsPass2.getCommand());
 
         pass2ProcessHelper = new ProcessHelper()
-                .command(command)
+                .command(processParamsPass2)
                 .processDescription("Encoding " + clip.getSource().getFileName())
                 .processReference(clip.getUuidString())
                 .logSubscriber(this);

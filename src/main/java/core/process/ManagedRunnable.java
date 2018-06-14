@@ -16,11 +16,11 @@ public class ManagedRunnable implements Runnable {
 
     }
 
-    public String getCommand() {
+    public ProcessParams getCommand() {
         return process.getCommand();
     }
 
-    public void setCommand(String command) {
+    public void setCommand(ProcessParams command) {
         process.setCommand(command);
         process.save();
 
