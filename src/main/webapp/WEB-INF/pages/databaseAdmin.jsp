@@ -97,70 +97,96 @@
                 <input type="number" min="0" max="9" ng-model="timeFrameTens"/>
                 <input type="number" min="0" max="9" ng-model="timeFrameOnes"/>
 
-                <input type="button" value="Set" ng-click="setSourceTime()"/>
+                <button type="button" class="btn btn-primary" ng-click="setSourceTime()">Set</button>
 
                 <input type="number" min="0" max="10" ng-change="setSourceSpeed()" ng-model="playBackSpeed"/>
 
                 <div class="container no-gutters">
                     <div class="row no-gutters">
                         <div class="col">
-                            Marks: <input type="button" value="Mark" ng-click="createMark()"/>
-                            <div ng-repeat="mark in selectedSource.marks" class="card">
-                                <div class="card-body">
-                                    {{ toTimeString(mark.time) }}
-                                    <input type="button" value="Show" ng-click="jumpToMark(mark)"/>
-                                    <input type="button" value="Delete" ng-click="deleteMark(mark)"/>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            Clips: <input type="button" value="Clip" ng-click="createClip()"/>
+                            Marks:
+                            <button type="button" class="btn btn-primary" ng-click="createMark()">Mark</button>
                             <div ng-repeat="clip in selectedSource.clips" class="card">
                                 <div class="card-body">
                                     <div ng-switch on="clip.lockedIn">
-                                        <div ng-switch-default>
-                                            <select ng-model="clip.startMark"
-                                                    ng-change="setClipStart(clip)">
-                                                <option ng-repeat="mark in selectedSource.marks"
-                                                        ng-value="mark">
-                                                    {{ toTimeString(mark.time) }}
-                                                </option>
-                                            </select>
-                                            -
-                                            <select ng-model="clip.endMark"
-                                                    ng-change="setClipEnd(clip)">
-                                                <option ng-repeat="mark in selectedSource.marks"
-                                                        ng-value="mark">
-                                                    {{ toTimeString(mark.time) }}
-                                                </option>
-                                            </select>
-                                        </div>
-                                        <div ng-switch-when="true">
-                                            {{ toTimeString(clip.startMark.time) }} - {{ toTimeString(clip.endMark.time)
-                                            }}
+                                        <div ng-repeat="mark in selectedSource.marks" class="card">
+                                            <div class="card-body">
+                                                {{ toTimeString(mark.time) }}
+                                                <button type="button" class="btn btn-primary"
+                                                        ng-click="jumpToMark(mark)">Show
+                                                </button>
+                                                <button type="button" class="btn btn-primary"
+                                                        ng-click="deleteMark(mark)">Delete
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
+                                    <div class="col">
+                                        Clips:
+                                        <button type="button" class="btn btn-primary" ng-click="createClip()">Clip
+                                        </button>
+                                        <div ng-repeat="clip in selectedSource.clips" class="card">
+                                            <div class="card-body">
+                                                <div ng-switch on="clip.lockedIn">
+                                                    <div ng-switch-default>
+                                                        <select ng-model="clip.startMark"
+                                                                ng-change="setClipStart(clip)">
+                                                            <option ng-repeat="mark in selectedSource.marks"
+                                                                    ng-value="mark">
+                                                                {{ toTimeString(mark.time) }}
+                                                            </option>
+                                                        </select>
+                                                        -
+                                                        <select ng-model="clip.endMark"
+                                                                ng-change="setClipEnd(clip)">
+                                                            <option ng-repeat="mark in selectedSource.marks"
+                                                                    ng-value="mark">
+                                                                {{ toTimeString(mark.time) }}
+                                                            </option>
+                                                        </select>
+                                                    </div>
+                                                    <div ng-switch-when="true">
+                                                        {{ toTimeString(clip.startMark.time) }} - {{
+                                                        toTimeString(clip.endMark.time)
+                                                        }}
+                                                    </div>
+                                                </div>
 
-                                    <div ng-switch on="clip.lockedIn">
-                                        <div ng-switch-default>
-                                            <input type="button" value="Lock In" ng-click="lockInClip(clip)"/>
-                                        </div>
-                                        <div ng-switch-when="true">
-                                            <input type="button" value="Unlock" ng-click="unlockClip(clip)"/>
-                                            <input type="button" value="Split" ng-click="splitClip(clip)"/>
-                                            <input type="button" value="Finalise" ng-click="finaliseClip(clip)"/>
+                                                <div ng-switch on="clip.lockedIn">
+                                                    <div ng-switch-default>
+                                                        <button type="button" class="btn btn-primary"
+                                                                ng-click="lockInClip(clip)">
+                                                            Lock In
+                                                        </button>
+                                                    </div>
+                                                    <div ng-switch-when="true">
+                                                        <button type="button" class="btn btn-primary"
+                                                                ng-click="unlockClip(clip)">
+                                                            Unlock
+                                                        </button>
+                                                        <button type="button" class="btn btn-primary"
+                                                                ng-click="splitClip(clip)">
+                                                            Split
+                                                        </button>
+                                                        <button type="button" class="btn btn-primary"
+                                                                ng-click="finaliseClip(clip)">
+                                                            Finalise
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+                                                <button type="button" class="btn btn-primary"
+                                                        ng-click="deleteClip(clip)">
+                                                    Delete
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
-
-                                    <input type="button" value="Delete" ng-click="deleteClip(clip)"/>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
 
 <jsp:include page="../includes/footer.jsp"/>

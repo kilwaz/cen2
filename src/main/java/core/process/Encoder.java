@@ -103,7 +103,7 @@ public class Encoder implements Flow.Subscriber<LogMessage> {
                 .add("17")
                 .add("-f")
                 .add("webm")
-                .add(FFMPEG_FINAL_ENCODED_DESTINATION + "/encoded-" + clip.getUuidString() + "." + clip.getSource().getFileExtension());
+                .add(FFMPEG_FINAL_ENCODED_DESTINATION + "/encoded-" + clip.getUuidString() + ".webm");
 
 //        command = "/usr/bin/ffmpeg -y -i " + clip.getFileName() + " -c:v libvpx-vp9 -c:a libopus -pass 2 -passlogfile " + FFMPEG_LOG_FILE_DIR + clip.getUuidString() + " -b:v 0 -deadline good -crf 17 -f webm " + FFMPEG_FINAL_ENCODED_DESTINATION + "/encoded-" + clip.getUuidString() + "." + clip.getSource().getFileExtension();
 

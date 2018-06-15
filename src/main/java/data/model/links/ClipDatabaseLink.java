@@ -21,5 +21,6 @@ public class ClipDatabaseLink extends DatabaseLink {
         link("file_name", method("getFileName"), method("setFileName", String.class)); // 5
         link("locked_in", method("getLockedIn"), method("setLockedIn", Boolean.class)); // 6
         link("encoded_progress_id", method("getEncodedProgressUUID"), method("setEncodedProgress", EncodedProgress.class)); // 7
+        link("published", method("getPublished"), method("setPublished", Boolean.class)); // 8
     }
 }

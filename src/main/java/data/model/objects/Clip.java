@@ -15,12 +15,13 @@ public class Clip extends DatabaseObject {
     private String fileName = "";
     private Boolean lockedIn = false;
     private EncodedProgress encodedProgress;
+    private Boolean published = false;
 
     public Clip() {
         super();
     }
 
-    public Clip(UUID uuid, Source source, Mark startMark, Mark endMark, String fileName, Boolean lockedIn, EncodedProgress encodedProgress) {
+    public Clip(UUID uuid, Source source, Mark startMark, Mark endMark, String fileName, Boolean lockedIn, EncodedProgress encodedProgress, Boolean published) {
         super(uuid);
         this.source = source;
         this.startMark = startMark;
@@ -28,6 +29,7 @@ public class Clip extends DatabaseObject {
         this.fileName = fileName;
         this.lockedIn = lockedIn;
         this.encodedProgress = encodedProgress;
+        this.published = published;
     }
 
     @JSONMappable("source")
@@ -113,5 +115,14 @@ public class Clip extends DatabaseObject {
         }
 
         return null;
+    }
+
+    @JSONMappable("published")
+    public Boolean getPublished() {
+        return published;
+    }
+
+    public void setPublished(Boolean published) {
+        this.published = published;
     }
 }

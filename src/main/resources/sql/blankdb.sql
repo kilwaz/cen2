@@ -63,6 +63,7 @@ create table clip(
     file_name varchar(1000),
     locked_in bool,
     encoded_progress_id char(36),
+    published bool,
     PRIMARY KEY (uuid));
 
 create table mark(

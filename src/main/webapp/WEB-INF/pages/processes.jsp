@@ -42,6 +42,9 @@
                                     <button type="button" class="btn btn-primary"
                                             ng-click="updateEncodedProgress(clip)">Refresh Progress
                                     </button>
+                                    <button type="button" class="btn btn-primary"
+                                            ng-click="">Publish
+                                    </button>
                                 </div>
                             </div>
                             <div class="progress">
