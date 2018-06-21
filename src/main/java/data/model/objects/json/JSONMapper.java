@@ -19,7 +19,7 @@ public class JSONMapper<DBO extends DatabaseObject> {
 
             Method[] methods = mappingClass.getMethods();
 
-            for (Method method : methods) {
+            for (Method method: methods) {
                 JSONMappable jsonMappable = method.getAnnotation(JSONMappable.class);
                 if (jsonMappable != null) { // Mappable annotation exists
                     try {
@@ -43,7 +43,7 @@ public class JSONMapper<DBO extends DatabaseObject> {
     public JSONArray process(List<DBO> databaseObjectList) {
         JSONArray objects = new JSONArray();
 
-        for (DBO databaseObject : databaseObjectList) {
+        for (DBO databaseObject: databaseObjectList) {
             objects.put(process(databaseObject));
         }
 

@@ -68,6 +68,19 @@ public class JSONContainer<DatabaseObject> {
         }
     }
 
+    public void writeToResponseAsDataTable(HttpServletResponse response) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("data", getData());
+
+        try {
+            PrintWriter out = response.getWriter();
+            out.print(jsonObject);
+            out.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public String writeToString() {
         return JSONMapper.build().process(data).toString();
     }

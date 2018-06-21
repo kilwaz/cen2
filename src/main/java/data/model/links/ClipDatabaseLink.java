@@ -15,9 +15,9 @@ public class ClipDatabaseLink extends DatabaseLink {
 
         // Make sure the order is the same as column order in database
         link("uuid", method("getUuidString"), method("setUuid", UUID.class)); // 1
-        link("source", method("getSourceUUID"), method("setSource", Source.class)); // 2
-        link("start_mark", method("getStartMarkUUID"), method("setStartMark", Mark.class)); // 3
-        link("end_mark", method("getEndMarkUUID"), method("setEndMark", Mark.class)); // 4
+        link("source_id", method("getSourceUUID"), method("setSource", Source.class)); // 2
+        link("start_mark_id", method("getStartMarkUUID"), method("setStartMark", Mark.class)); // 3
+        link("end_mark_id", method("getEndMarkUUID"), method("setEndMark", Mark.class)); // 4
         link("file_name", method("getFileName"), method("setFileName", String.class)); // 5
         link("locked_in", method("getLockedIn"), method("setLockedIn", Boolean.class)); // 6
         link("encoded_progress_id", method("getEncodedProgressUUID"), method("setEncodedProgress", EncodedProgress.class)); // 7

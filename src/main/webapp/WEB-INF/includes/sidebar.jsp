@@ -20,5 +20,8 @@
         <li>
             <cen:internalLink classLink="pages.Processes" value="Processes" icon="fa fa-car"/>
         </li>
+        <li>
+            <cen:internalLink classLink="pages.People" value="People" icon="fa fa-car"/>
+        </li>
     </ul>
 </nav>

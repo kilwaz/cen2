@@ -2,6 +2,7 @@ package data.imports;
 
 import core.process.Prober;
 import data.model.objects.EncodedProgress;
+import data.model.objects.Person;
 import data.model.objects.Source;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
@@ -64,6 +65,21 @@ public class XMLImporter {
                 }
 
                 prober.execute();
+            }
+            if ("People".equals(docEle.getTagName())) {
+                NodeList personNodeList = docEle.getElementsByTagName("Person");
+
+                for (int i = 0; i < personNodeList.getLength(); i++) { // Loop through each Person
+                    Element personNode = (Element) personNodeList.item(i);
+
+                    String firstName = personNode.getElementsByTagName("firstName").item(0).getTextContent();
+                    String lastName = personNode.getElementsByTagName("lastName").item(0).getTextContent();
+
+                    Person newPerson = Person.create(Person.class);
+                    newPerson.setFirstName(firstName);
+                    newPerson.setLastName(lastName);
+                    newPerson.save();
+                }
             }
         } catch (ParserConfigurationException | SAXException | IOException ex) {
             ex.printStackTrace();

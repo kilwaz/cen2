@@ -20,6 +20,8 @@ public class DatabaseLink {
         linkClasses.put(EncodedProgress.class, EncodedProgressDatabaseLink.class);
         linkClasses.put(Clip.class, ClipDatabaseLink.class);
         linkClasses.put(Mark.class, MarkDatabaseLink.class);
+        linkClasses.put(Person.class, PersonDatabaseLink.class);
+        linkClasses.put(Appearance.class, AppearanceDatabaseLink.class);
     }
 
     private String tableName = "";

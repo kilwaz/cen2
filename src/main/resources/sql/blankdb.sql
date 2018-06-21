@@ -35,7 +35,8 @@ create table encoded_progress(
 
 create table person(
     uuid char(36) NOT NULL,
-    name varchar(200),
+    first_name varchar(200),
+    last_name varchar(200),
     PRIMARY KEY (uuid));
 
 create table process(
@@ -46,7 +47,7 @@ create table process(
 
 create table picture(
     uuid char(36) NOT NULL,
-    source char(36),
+    source_id char(36),
     PRIMARY KEY (uuid));
 
 create table appearances (
@@ -57,9 +58,9 @@ create table appearances (
 
 create table clip(
     uuid char(36) NOT NULL,
-    source char(36),
-    start_mark char(36),
-    end_mark char(36),
+    source_id char(36),
+    start_mark_id char(36),
+    end_mark_id char(36),
     file_name varchar(1000),
     locked_in bool,
     encoded_progress_id char(36),
