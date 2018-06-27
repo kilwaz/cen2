@@ -20,7 +20,5 @@ public class ResetDatabase extends Request {
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) {
         DBConnectionManager.getInstance().getApplicationConnection().rebuildDatabase();
-
-        log.info("Done.");
     }
 }
